@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,51 +20,47 @@ namespace ZappitBugTracker.Controllers
         #region Private Fields
         private readonly ApplicationDbContext _context;
         private readonly IBTProjectService _projectService;
+        private readonly IBTAccessService _accessService;
+        private readonly UserManager<BTUser> _userManager;
+        private readonly IBTRolesService _rolesService;
+
         #endregion
         #region constructors
-        public ProjectsController(ApplicationDbContext context, IBTProjectService projectService)
+        public ProjectsController(ApplicationDbContext context, IBTProjectService projectService, IBTAccessService accessService, UserManager<BTUser> userManager, IBTRolesService rolesService)
         {
             _context = context;
             _projectService = projectService;
+            _accessService = accessService;
+            _userManager = userManager;
+            _rolesService = rolesService;
         }
         #endregion
         #region GET/POST AddProjectUsers
+        //GET AddProjectUsers
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> AddProjectUsers(int id)
         {
-
             var model = new ManageProjectUsersViewModels();
             var project = _context.Projects.Find(id);
-
             model.Project = project;
             List<BTUser> users = await _context.Users.ToListAsync();
             List<BTUser> members = (List<BTUser>)await _projectService.UsersOnProject(id);
             model.Users = new MultiSelectList(users, "Id", "FullName", members);
-
-
-
-
-
-
-
             return View(model);
         }
-
+        //POST AddProjectUsers
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> AddProjectUsers(ManageProjectUsersViewModels model)
         {
-
             if (model.SelectedUsers != null)
             {
                 var currentMembers = await _context.Projects
                .Include(p => p.ProjectUsers)
                .FirstOrDefaultAsync(p => p.Id == model.Project.Id);
                 List<string> memberIds = currentMembers.ProjectUsers.Select(u => u.UserId).ToList();
-
-
                 foreach (string id in memberIds)
                 {
                     await _projectService.RemoveUserFromProject(id, model.Project.Id);
@@ -78,10 +75,6 @@ namespace ZappitBugTracker.Controllers
             {
                 // send an error message back
             }
-
-
-
-
             return RedirectToAction();
         }
         #endregion
@@ -90,7 +83,18 @@ namespace ZappitBugTracker.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Projects.ToListAsync());
+            var user = await _userManager.GetUserAsync(User);
+
+            if (await _rolesService.IsUserInRole(user, "Admin"))
+            {
+                return View(await _context.Projects.ToListAsync());
+            };
+            if (await _rolesService.IsUserInRole(user, "ProjectManager"))
+            {
+                return View(await _context.Projects.ToListAsync());
+            };
+
+            return View(await _projectService.ListUserProjectsAsync(user.Id));
         }
         #endregion
         #region GET details
@@ -104,7 +108,6 @@ namespace ZappitBugTracker.Controllers
             }
 
             var project = await _context.Projects
-
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (project == null)
             {
@@ -121,9 +124,7 @@ namespace ZappitBugTracker.Controllers
         {
             return View();
         }
-
         // POST: Identity/Projects/Create
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ProjectManager")]
@@ -155,7 +156,6 @@ namespace ZappitBugTracker.Controllers
             }
             return View(project);
         }
-
         // POST: Identity/Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -209,7 +209,6 @@ namespace ZappitBugTracker.Controllers
 
             return View(project);
         }
-
         // POST: Identity/Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

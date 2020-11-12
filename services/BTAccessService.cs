@@ -9,11 +9,10 @@ using ZappitBugTracker.Data;
 
 namespace ZappitBugTracker.services
 {
-    public class BTDisplayService : IBTDisplayService
+    public class BTAccessService : IBTAccessService
     {
         private readonly ApplicationDbContext _context;
-
-        public BTDisplayService(ApplicationDbContext context)
+        public BTAccessService(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -28,33 +27,42 @@ namespace ZappitBugTracker.services
                     {
                         return true;
                     }
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
                 default:
                     return false;
             }
         }
-        public async Task<bool> CanInteractTicket(string userId, int projectId, string roleName)
+        public async Task<bool> CanInteractTicket(string userId, int ticketId, string roleName)
         {
+            bool result = false;
             switch (roleName)
             {
                 case "Admin":
-                    return true;
+                    result = true;
+                    break;
                 case "ProjectManager":
+                    var projectId = (await _context.Tickets.FindAsync(ticketId)).ProjectId;
                     if (await _context.ProjectUsers.Where(pu => pu.UserId == userId && pu.ProjectId == projectId).AnyAsync())
                     {
-                        return true;
+                        result = true;
                     }
-                    else
+                    break;
+                case "Developer":
+                    if (await _context.Tickets.Where(t => t.DeveloperUserId == userId && t.Id == ticketId).AnyAsync())
                     {
-                        return false;
+                        result = true;
                     }
+                    break;
+                case "Submitter":
+                    if (await _context.Tickets.Where(t => t.OwnerUserId == userId && t.Id == ticketId).AnyAsync())
+                    {
+                        result = true;
+                    }
+                    break;
                 default:
-                    return false;
+                    break;
             }
+            return result;
         }
-        
     }
 }

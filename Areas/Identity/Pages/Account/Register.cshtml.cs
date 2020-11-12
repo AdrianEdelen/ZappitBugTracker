@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using ZappitBugTracker.Data;
 using ZappitBugTracker.Models;
 
 namespace ZappitBugTracker.Areas.Identity.Pages.Account
@@ -80,6 +81,9 @@ namespace ZappitBugTracker.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // -- Add new registrant a role of "NewUser" -- //
+                    await _userManager.AddToRoleAsync(user, Roles.NewUser.ToString());
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

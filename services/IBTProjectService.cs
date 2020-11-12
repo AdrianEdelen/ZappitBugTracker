@@ -11,7 +11,7 @@ namespace ZappitBugTracker.services
     public interface IBTProjectService
     {
         public Task<bool> IsUserOnProject(string userId, int projectId);
-        public Task<ICollection<Project>> ListUserProjects(string userId);
+        public Task<ICollection<Project>> ListUserProjectsAsync(string userId);
         public Task AddUserToProject(string userId, int projectId);
         public Task RemoveUserFromProject(string userId, int projectId);
         public Task<ICollection<BTUser>> UsersOnProject(int projectId);

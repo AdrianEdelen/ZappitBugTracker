@@ -41,7 +41,7 @@ namespace ZappitBugTracker
             services.AddScoped<IBTRolesService, BTRolesService>();
             services.AddScoped<IBTProjectService, BTProjectService>();
             services.AddScoped<IBTHistoryService, BTHistoryService>();
-            services.AddScoped<IBTDisplayService, BTDisplayService>();
+            services.AddScoped<IBTAccessService, BTAccessService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();

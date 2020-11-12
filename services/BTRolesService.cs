@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +57,7 @@ namespace ZappitBugTracker.services
         public async Task<ICollection<BTUser>> UsersNotInRole(IdentityRole role)
         {
             //var roleId = await _roleManager.GetRoleIdAsync(role);
-            var result = _userManager.Users.Where(u => IsUserInRole(u, role.Name).Result == false).ToList();
+            var result = await _userManager.Users.Where(u => IsUserInRole(u, role.Name).Result == false).ToListAsync();
             return result;
 
         }

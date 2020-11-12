@@ -24,7 +24,7 @@ namespace ZappitBugTracker.Controllers
         #endregion
         #region GET Index
         // GET: TicketStatus
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.TicketStatus.ToListAsync());
@@ -32,7 +32,7 @@ namespace ZappitBugTracker.Controllers
         #endregion
         #region GET Details
         // GET: TicketStatus/Details/5
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,7 +52,7 @@ namespace ZappitBugTracker.Controllers
         #endregion
         #region GET/POST Create
         // GET: TicketStatus/Create
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -61,7 +61,7 @@ namespace ZappitBugTracker.Controllers
         // POST: TicketStatus/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name")] TicketStatus ticketStatus)
         {
             if (ModelState.IsValid)
@@ -75,7 +75,7 @@ namespace ZappitBugTracker.Controllers
         #endregion
         #region GET/POST Edit
         // GET: TicketStatus/Edit/5
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -94,7 +94,7 @@ namespace ZappitBugTracker.Controllers
         // POST: TicketStatus/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] TicketStatus ticketStatus)
         {
             if (id != ticketStatus.Id)
@@ -127,7 +127,7 @@ namespace ZappitBugTracker.Controllers
         #endregion
         #region GET/POST Delete
         // GET: TicketStatus/Delete/5
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,7 +148,7 @@ namespace ZappitBugTracker.Controllers
         // POST: TicketStatus/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var ticketStatus = await _context.TicketStatus.FindAsync(id);
