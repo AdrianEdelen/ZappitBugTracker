@@ -1,0 +1,83 @@
+﻿@model IEnumerable<ZappitBugTracker.Models.Ticket>
+
+@{
+	ViewData["Title"] = "ProjectTickets";
+}
+
+<h1>Tickets for This Project</h1>
+
+<p>
+	<a asp-route-id="@ViewData["ProjectId"]" asp-action="Create">Create New Ticket</a>
+</p>
+<div>
+	<a asp-area="" asp-controller="Projects" asp-action="Index">Back to Projects</a>
+</div>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Title)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Description)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Created)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Updated)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.TicketType)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.TicketStatus)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.OwnerUser)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.DeveloperUser)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+		<tr>
+			<td>
+				<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
+				
+			</td>
+			<td>
+				<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Description)</a>
+					
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Created)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Updated)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.TicketType.Name)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.TicketStatus.Name)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.OwnerUser.FullName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
+			</td>
+			<td>
+				<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+				<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+			</td>
+		</tr>
+		}
+	</tbody>
+</table>
+

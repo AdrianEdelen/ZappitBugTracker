@@ -1,0 +1,34 @@
+﻿@model ZappitBugTracker.Models.ViewModels.ManageProjectUsersViewModels
+
+
+
+<div class="row">
+	
+		<div class="card col-6" style="margin:2px">
+			<div class="card-body">
+				<h2 class="m-t-0 h3"><b>Assign Users to @Model.Project.Name</b></h2>
+				<p class="text-muted font-13 m-b-30">
+					This form displays the current users assigned to the project: @Model.Project.Name. Use the dropdown to select the roles that this user should be assigned. Once roles are selected, click "Assign Roles" to submit the form.
+				</p>
+				<hr />
+				<form asp-controller="Projects" asp-action="AddProjectUsers" method="post">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					<input type="hidden" asp-for="@Model.Project.Id">
+					<div class="col-12">
+						<div class="form-group">
+							<label asp-for="@Model.Users" class="control-label">Users in @Model.Project.Name</label>
+							<select asp-for="@Model.SelectedUsers" class="form-control" asp-items="@Model.Users" multiple="multiple"></select>
+						</div>
+					</div>
+					<hr />
+					<div class="col-12">
+						<div class="form-group pull-right">
+							<input type="submit" value="Assign Users" class="btn btn-info" />
+							<a class="btn btn-info" asp-controller="Projects" asp-action="Index">Cancel</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+</div>
+
