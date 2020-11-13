@@ -1,6 +1,11 @@
 ﻿@model IEnumerable<ZappitBugTracker.Models.Ticket>
-
+@inject Microsoft.AspNetCore.Identity.UserManager<BTUser> userManager
+@inject ZappitBugTracker.services.IBTRolesService rolesService
+@inject ZappitBugTracker.services.IBTProjectService projectService
+@inject ZappitBugTracker.services.IBTAccessService accessService
 @{
+	var user = await userManager.GetUserAsync(User);
+	var userId = await userManager.GetUserIdAsync(user);
 	ViewData["Title"] = "ProjectTickets";
 }
 
@@ -12,7 +17,7 @@
 <div>
 	<a asp-area="" asp-controller="Projects" asp-action="Index">Back to Projects</a>
 </div>
-<table class="table">
+<table class="table" id="myTable">
 	<thead>
 		<tr>
 			<th>
@@ -45,39 +50,79 @@
 	<tbody>
 		@foreach (var item in Model)
 		{
-		<tr>
-			<td>
-				<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
-				
-			</td>
-			<td>
-				<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Description)</a>
-					
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.Created)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.Updated)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.TicketType.Name)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.TicketStatus.Name)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.OwnerUser.FullName)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
-			</td>
-			<td>
-				<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-				<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-			</td>
-		</tr>
+			if (await accessService.CanInteractTicket(userId, item.Id, "Developer")
+				|| await rolesService.IsUserInRole(user, "Admin")
+				|| (await rolesService.IsUserInRole(user, "ProjectManager")
+				&& await projectService.IsUserOnProject(userId, item.ProjectId))
+				|| userId == item.OwnerUserId)
+			{
+				<tr>
+					<td>
+						<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
+
+					</td>
+					<td>
+						<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Description)</a>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Created)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Updated)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.TicketType.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.TicketStatus.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.OwnerUser.FullName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
+					</td>
+					<td>
+						<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+						<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+					</td>
+				</tr>
+			}
+
+			@*<tr>
+					<td>
+						<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
+
+					</td>
+					<td>
+						<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Description)</a>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Created)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Updated)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.TicketType.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.TicketStatus.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.OwnerUser.FullName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
+					</td>
+					<td>
+						<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+						<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+					</td>
+				</tr>*@
 		}
 	</tbody>
 </table>
+
+
 

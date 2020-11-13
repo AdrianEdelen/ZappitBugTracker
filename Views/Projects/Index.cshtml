@@ -1,51 +1,115 @@
 ﻿@model IEnumerable<ZappitBugTracker.Models.Project>
-@using ZappitBugTracker.services
+@inject Microsoft.AspNetCore.Identity.UserManager<BTUser> userManager
+@inject ZappitBugTracker.services.IBTRolesService rolesService
+@inject ZappitBugTracker.services.IBTProjectService projectService
+@inject ZappitBugTracker.services.IBTAccessService accessService
+
 @{
-    ViewData["Title"] = "Index";
+	var user = await userManager.GetUserAsync(User);
+	var visibleProjects = projectService.ListUserProjectsAsync(user.Id);
+	var userId = await userManager.GetUserIdAsync(user);
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagePath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageData)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        
-        <tr>
-			<td>
-				<a asp-controller="Tickets" asp-action="ProjectTickets" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-				
-			</td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImagePath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageData)
-            </td>
-			<td>
-				<a asp-action="AddProjectUsers" asp-route-id="@item.Id">Add Users To Project</a> |
-				<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-				<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-				<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                
-			</td>
-        </tr>
-}
-    </tbody>
+
+
+<h1>Your Projects</h1>
+<table class="table" id="myTable">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ImagePath)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ImageData)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+
+		@foreach (var item in Model)
+		{
+
+			<tr>
+				<td>
+					<a asp-controller="Tickets" asp-action="ProjectTickets" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ImagePath)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ImageData)
+				</td>
+				<td>
+					@if (User.IsInRole("Admin"))
+					{
+						<a asp-action="AddProjectUsers" asp-route-id="@item.Id">Add Users To Project</a><span> |</span>
+					}
+					<a asp-action="Details" asp-route-id="@item.Id">Details</a>
+				</td>
+			</tr>
+		}
+
+
+	</tbody>
 </table>
+
+@*@if (await rolesService.IsUserInRole(user, "Admin") || await rolesService.IsUserInRole(user, "ProjectManager"))
+	{
+		<h1>All Projects</h1>
+		<p>
+			<a asp-action="Create">Create New</a>
+		</p>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						@Html.DisplayNameFor(model => model.Name)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.ImagePath)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.ImageData)
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+
+				@foreach (var item in Model)
+				{
+
+					<tr>
+						<td>
+							<a asp-controller="Tickets" asp-action="ProjectTickets" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.ImagePath)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.ImageData)
+						</td>
+						<td>
+							<a asp-action="AddProjectUsers" asp-route-id="@item.Id">Add Users To Project</a> |
+							<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+							<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+
+
+						</td>
+					</tr>
+				}
+
+
+			</tbody>
+		</table>
+
+	}*@
+

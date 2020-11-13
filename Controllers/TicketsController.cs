@@ -28,6 +28,15 @@ namespace ZappitBugTracker.Controllers
             _historyService = historyService;
         }
         #endregion
+
+        //public async Task<IActionResult> ViewMyTickets()
+        //{
+            
+        //}
+
+
+
+
         #region GET Project Tickets
         //GET Project Tickets
         [Authorize]
@@ -104,7 +113,7 @@ namespace ZappitBugTracker.Controllers
         #endregion
         #region GET/POST Create
         // GET: Tickets/Create
-        [Authorize]
+        [Authorize(Roles = "Admin,ProjectManager,Submitter,Developer")]
         public IActionResult Create(int? id)
         {
             if (id != null)
@@ -123,7 +132,7 @@ namespace ZappitBugTracker.Controllers
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin,ProjectManager,Submitter,Developer")]
         public async Task<IActionResult> Create([Bind("ProjectId,Title,Description,TicketTypeId")] Ticket ticket)
         {
 
@@ -151,7 +160,7 @@ namespace ZappitBugTracker.Controllers
         #endregion
         #region GET/POST Edit
         // GET: Tickets/Edit/5
-        [Authorize]
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -165,11 +174,11 @@ namespace ZappitBugTracker.Controllers
                 return NotFound();
             }
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
-            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
+            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
+            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Name", ticket.OwnerUserId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
-            ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Id", ticket.TicketPriorityId);
-            ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Id", ticket.TicketStatusId);
+            ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Name", ticket.TicketPriorityId);
+            ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Name", ticket.TicketStatusId);
             //ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
             return View(ticket);
         }
@@ -177,7 +186,7 @@ namespace ZappitBugTracker.Controllers
         // POST: Tickets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,DeveloperUserId")] Ticket ticket)
         {
             if (id != ticket.Id)
@@ -213,7 +222,8 @@ namespace ZappitBugTracker.Controllers
                 await _historyService.AddHistory(oldTicket, ticket, userId);
 
                 ticket.Updated = DateTime.Now;
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("ProjectTickets", "Tickets", new { id = ticket.ProjectId });
+                //return RedirectToAction(nameof(Index));
             }
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
             ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
@@ -226,7 +236,7 @@ namespace ZappitBugTracker.Controllers
         #endregion
         #region GET/POST Delete
         // GET: Tickets/Delete/5
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -253,7 +263,7 @@ namespace ZappitBugTracker.Controllers
         // POST: Tickets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var ticket = await _context.Tickets.FindAsync(id);
