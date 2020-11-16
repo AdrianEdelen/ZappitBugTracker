@@ -83,43 +83,14 @@
 						@Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
 					</td>
 					<td>
-						<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+						@if (await rolesService.IsUserInRole(user, "Submitter") == false)
+						{
+							<a asp-action="Edit" asp-route-id="@item.Id">Edit</a><span> | </span>
+						}
 						<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 					</td>
 				</tr>
 			}
-
-			@*<tr>
-					<td>
-						<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
-
-					</td>
-					<td>
-						<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Description)</a>
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Created)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Updated)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.TicketType.Name)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.TicketStatus.Name)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.OwnerUser.FullName)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
-					</td>
-					<td>
-						<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-						<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-					</td>
-				</tr>*@
 		}
 	</tbody>
 </table>
