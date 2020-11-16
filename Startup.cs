@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ZappitBugTracker.Models;
 using ZappitBugTracker.services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace ZappitBugTracker
 {
@@ -42,6 +43,8 @@ namespace ZappitBugTracker
             services.AddScoped<IBTProjectService, BTProjectService>();
             services.AddScoped<IBTHistoryService, BTHistoryService>();
             services.AddScoped<IBTAccessService, BTAccessService>();
+            services.AddTransient<IEmailSender, EmailService>();
+
 
             services.AddControllersWithViews();
             services.AddRazorPages();

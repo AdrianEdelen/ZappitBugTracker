@@ -157,10 +157,10 @@ namespace ZappitBugTracker.Data
             }
             #endregion
         }
-        public static async Task SeedDefaultprojectsTicketsComments(ApplicationDbContext context)
-        {
+        //public static async Task SeedDefaultprojectsTicketsComments(ApplicationDbContext context)
+        //{
 
-        }
+        //}
         public static async Task SeedDefaultTicketPriority(ApplicationDbContext context)
         {
             var defaultSeedNew = new TicketPriority
