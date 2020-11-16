@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
@@ -16,7 +18,7 @@ namespace ZappitBugTracker.services
         {
             _mailSettings = mailSettings.Value;
         }
-        public Task SendEmailAsync(string emailTo, string subject, string htmlMessage)
+        public async Task SendEmailAsync(string emailTo, string subject, string htmlMessage)
         {
             var email = new MimeMessage();
 
@@ -37,7 +39,7 @@ namespace ZappitBugTracker.services
 
             await smtp.SendAsync(email);
 
-            smpt.Disconnect(true);
+            smtp.Disconnect(true);
         }
     }
 }
