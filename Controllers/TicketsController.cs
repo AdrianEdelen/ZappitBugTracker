@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -233,7 +234,7 @@ namespace ZappitBugTracker.Controllers
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
             return View(ticket);
         }
-        #endregion
+        #endregion 
         #region GET/POST Delete
         // GET: Tickets/Delete/5
         [Authorize(Roles = "Admin")]
@@ -270,6 +271,24 @@ namespace ZappitBugTracker.Controllers
             _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+        #endregion
+        #region Ticket Attachments
+        [HttpPost]
+        public async Task<IActionResult> CreateAttachment(int ticketId, string description, IFormFile attachment)
+        {
+            TicketAttachment ticketAttachment = new TicketAttachment
+            {
+                Description = description,
+                TicketId = ticketId,
+                //FileData = Encoder(attachment.FileName),
+                //FilePath = Encoder(attachment.FileName),
+                Created = DateTimeOffset.Now,
+                UserId = _userManager.GetUserId(User)
+            };
+            _context.TicketAttachments.Add(ticketAttachment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "Tickets", new { id = ticketId });
         }
         #endregion
         private bool TicketExists(int id)

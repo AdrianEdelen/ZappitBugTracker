@@ -60,28 +60,6 @@ namespace ZappitBugTracker.Controllers
             return View(ticketComments);
         }
         #endregion
-        #region GET Details
-        // GET: TicketComments/Details/5
-        [Authorize]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var ticketComment = await _context.TicketComments
-                .Include(t => t.Ticket)
-                .Include(t => t.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ticketComment == null)
-            {
-                return NotFound();
-            }
-
-            return View(ticketComment);
-        }
-        #endregion
         #region GET/POST Create
         // GET: TicketComments/Create
         [Authorize]
