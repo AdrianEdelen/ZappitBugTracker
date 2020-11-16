@@ -1,6 +1,12 @@
 ﻿@model ZappitBugTracker.Models.Ticket
+@inject Microsoft.AspNetCore.Identity.UserManager<BTUser> userManager
+@inject ZappitBugTracker.services.IBTRolesService rolesService
+@inject ZappitBugTracker.services.IBTProjectService projectService
+@inject ZappitBugTracker.services.IBTAccessService accessService
 
 @{
+	var user = await userManager.GetUserAsync(User);
+	var userId = await userManager.GetUserIdAsync(user);
 	ViewData["Title"] = "Details";
 }
 
@@ -74,55 +80,62 @@
 			<a asp-controller="TicketAttachments" asp-action="Create" asp-route-id="TicketId">Add Attachment</a>
 		</dd>
 	</dl>
-	<div class="row">
-		<div class="col-3">
-			<dd>
-				<form asp-controller="TicketComments" asp-action="Create">
-					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-					@Html.Hidden("TicketId", Model.Id)
-					<div class="form-group">
-						<textarea name="Comment" class="form-control"> </textarea>
-					</div>
-					<div class="form-group">
-						<input type="submit" value="Create" class="btn btn-primary" />
-					</div>
-				</form>
-			</dd>
+	@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
+		 || await rolesService.IsUserInRole(user, "Admin")
+		 || (await rolesService.IsUserInRole(user, "ProjectManager")
+		 && await projectService.IsUserOnProject(userId, Model.ProjectId))
+		 || userId == Model.OwnerUserId)
+	{
+		<div class="row">
+			<div class="col-3">
+				<dd>
+					<form asp-controller="TicketComments" asp-action="Create">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+						@Html.Hidden("TicketId", Model.Id)
+						<div class="form-group">
+							<textarea name="Comment" class="form-control"> </textarea>
+						</div>
+						<div class="form-group">
+							<input type="submit" value="Create" class="btn btn-primary" />
+						</div>
+					</form>
+				</dd>
+			</div>
 		</div>
-	</div>
-	<table class="table" id="myTable">
-		<thead>
-			<tr>
-
-				<th>
-					Comment
-				</th>
-				<th>
-					Author
-				</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model.Comments)
-			{
+	}
+		<table class="table" id="myTable">
+			<thead>
 				<tr>
 
-					<td>
-						@Html.DisplayFor(modelItem => item.Comment)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.User.FullName)
-					</td>
-
-					<td>
-						<a asp-action="Details" asp-route-id="@item.Id">Details</a>
-
-					</td>
+					<th>
+						Comment
+					</th>
+					<th>
+						Author
+					</th>
+					<th></th>
 				</tr>
-			}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Comments)
+				{
+					<tr>
+
+						<td>
+							@Html.DisplayFor(modelItem => item.Comment)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.User.FullName)
+						</td>
+
+						<td>
+							<a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
 
 
 
@@ -131,8 +144,8 @@
 
 
 
-</div>
-<div>
-	<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-	<a asp-action="Index">Back to List</a>
-</div>
+	</div>
+	<div>
+		<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+		<a asp-action="Index">Back to List</a>
+	</div>
