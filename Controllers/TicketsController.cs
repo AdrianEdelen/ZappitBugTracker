@@ -174,6 +174,7 @@ namespace ZappitBugTracker.Controllers
             {
                 return NotFound();
             }
+            ticket.DeveloperUser = await _context.Users.FindAsync(ticket.DeveloperUserId);
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
             ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Name", ticket.OwnerUserId);
@@ -198,6 +199,8 @@ namespace ZappitBugTracker.Controllers
             Ticket oldTicket = await _context.Tickets
                 .AsNoTracking()
                 .FirstOrDefaultAsync(t => t.Id == ticket.Id);
+            //ticket.DeveloperUser = _context.Tickets.Include(t => t.DeveloperUser);
+            
 
             if (ModelState.IsValid)
             {

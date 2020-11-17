@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,13 @@ namespace ZappitBugTracker.services
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
+        private readonly IEmailSender _emailSender;
         
-        public BTHistoryService(ApplicationDbContext context, UserManager<BTUser> userManager)
+        public BTHistoryService(ApplicationDbContext context, UserManager<BTUser> userManager, IEmailSender emailSender)
         {
             _context = context;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         public async Task AddHistory(Ticket oldTicket, Ticket newTicket, string userId)
@@ -34,9 +37,27 @@ namespace ZappitBugTracker.services
                 await _context.TicketHistories.AddAsync(val);
                 await _context.SaveChangesAsync();
             }
+            Notification notification = new Notification
+            {
+                TicketId = newTicket.Id,
+                Description = "You Have A New Ticket",
+                Created = DateTimeOffset.Now,
+                SenderId = userId,
+                RecipientId = newTicket.DeveloperUserId
+            };
+            await _context.Notifications.AddAsync(notification);
+
+            //send email
+            string devEmail = newTicket.DeveloperUser.Email;
+            string subject = "New Ticket Assignment";
+            string message = $"You have a new ticket for project: {newTicket.Project.Name}";
+            await _emailSender.SendEmailAsync(devEmail, subject, message);
         }
 
-
+        private void SendEmailAsync()
+        {
+            throw new NotImplementedException();
+        }
 
         public IEnumerable<TicketHistory> GenerateTicketHistories(Ticket oldTicket, Ticket newTicket)
         {
