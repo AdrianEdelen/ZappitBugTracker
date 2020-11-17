@@ -76,6 +76,7 @@ namespace ZappitBugTracker
             {
                 endpoints.MapControllerRoute(
                     name: "default",
+                    //change the page that is loaded when first coming to the site
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });

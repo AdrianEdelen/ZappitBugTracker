@@ -195,7 +195,7 @@ namespace ZappitBugTracker.Controllers
             {
                 return NotFound();
             }
-
+            ticket.DeveloperUser = await _context.Users.FindAsync(ticket.DeveloperUserId);
             Ticket oldTicket = await _context.Tickets
                 .AsNoTracking()
                 .FirstOrDefaultAsync(t => t.Id == ticket.Id);

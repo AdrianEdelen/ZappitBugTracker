@@ -28,15 +28,87 @@ namespace ZappitBugTracker.services
 
         public async Task AddHistory(Ticket oldTicket, Ticket newTicket, string userId)
         {
-            var diffs = GenerateTicketHistories(oldTicket, newTicket);
-            foreach (var val in diffs)
+            if (oldTicket.Title != newTicket.Title)
             {
-                val.TicketId = oldTicket.Id;
-                val.UserId = userId;
-                val.Created = DateTime.Now;
-                await _context.TicketHistories.AddAsync(val);
-                await _context.SaveChangesAsync();
+                TicketHistory history = new TicketHistory
+                {
+                    TicketId = newTicket.Id,
+                    Property = "Title",
+                    OldValue = oldTicket.Title,
+                    NewValue = newTicket.Title,
+                    Created = DateTimeOffset.Now,
+                    UserId = userId
+                };
+                await _context.TicketHistories.AddAsync(history);
+                
             }
+            if (oldTicket.Description != newTicket.Description)
+            {
+                TicketHistory history = new TicketHistory
+                {
+                    TicketId = newTicket.Id,
+                    Property = "Description",
+                    OldValue = oldTicket.Description,
+                    NewValue = newTicket.Description,
+                    Created = DateTimeOffset.Now,
+                    UserId = userId
+                };
+                await _context.TicketHistories.AddAsync(history);
+                
+            }
+            if (oldTicket.TicketPriorityId != newTicket.TicketPriorityId)
+            {
+                TicketHistory history = new TicketHistory
+                {
+                    TicketId = newTicket.Id,
+                    Property = "Ticket Priority",
+                    OldValue = oldTicket.TicketPriority.Name,
+                    NewValue = newTicket.TicketPriority.Name,
+                    Created = DateTimeOffset.Now,
+                    UserId = userId
+                };
+                await _context.TicketHistories.AddAsync(history);
+            }
+            if (oldTicket.DeveloperUserId != newTicket.DeveloperUserId)
+            {
+                TicketHistory history = new TicketHistory
+                {
+                    TicketId = newTicket.Id,
+                    Property = "Developer User",
+                    OldValue = oldTicket.DeveloperUser.FullName,
+                    NewValue = newTicket.DeveloperUser.FullName,
+                    Created = DateTimeOffset.Now,
+                    UserId = userId
+                };
+                await _context.TicketHistories.AddAsync(history);
+            }
+            if (oldTicket.TicketStatusId != newTicket.TicketStatusId)
+            {
+                TicketHistory history = new TicketHistory
+                {
+                    TicketId = newTicket.Id,
+                    Property = "Ticket Status",
+                    OldValue = oldTicket.TicketStatus.Name,
+                    NewValue = newTicket.TicketStatus.Name,
+                    Created = DateTimeOffset.Now,
+                    UserId = userId
+                };
+                await _context.TicketHistories.AddAsync(history);
+            }
+            if (oldTicket.TicketTypeId != newTicket.TicketTypeId)
+            {
+                TicketHistory history = new TicketHistory
+                {
+                    TicketId = newTicket.Id,
+                    Property = "Ticket Type",
+                    OldValue = oldTicket.TicketType.Name,
+                    NewValue = newTicket.TicketType.Name,
+                    Created = DateTimeOffset.Now,
+                    UserId = userId
+                };
+                await _context.TicketHistories.AddAsync(history);
+            }
+
             Notification notification = new Notification
             {
                 TicketId = newTicket.Id,
@@ -48,9 +120,10 @@ namespace ZappitBugTracker.services
             await _context.Notifications.AddAsync(notification);
 
             //send email
+            var projectName = await _context.Users.FindAsync(newTicket.DeveloperUserId);
             string devEmail = newTicket.DeveloperUser.Email;
             string subject = "New Ticket Assignment";
-            string message = $"You have a new ticket for project: {newTicket.Project.Name}";
+            string message = $"You have a new ticket for project: {projectName}";
             await _emailSender.SendEmailAsync(devEmail, subject, message);
         }
 
@@ -103,81 +176,14 @@ namespace ZappitBugTracker.services
 //}
 //return changes;
 
-//if (oldTicket.Title != newTicket.Title)
+
+
+//var diffs = GenerateTicketHistories(oldTicket, newTicket);
+//foreach (var val in diffs)
 //{
-//    TicketHistory history = new TicketHistory
-//    {
-//        TicketId = newTicket.Id,
-//        Property = "Title",
-//        OldValue = oldTicket.Title,
-//        NewValue = newTicket.Title,
-//        Created = DateTimeOffset.Now,
-//        UserId = userId
-//    };
-//    await _context.TicketHistories.AddAsync(history);
-//}
-//if (oldTicket.Description != newTicket.Description)
-//{
-//    TicketHistory history = new TicketHistory
-//    {
-//        TicketId = newTicket.Id,
-//        Property = "Description",
-//        OldValue = oldTicket.Description,
-//        NewValue = newTicket.Description,
-//        Created = DateTimeOffset.Now,
-//        UserId = userId
-//    };
-//    await _context.TicketHistories.AddAsync(history);
-//}
-//if (oldTicket.TicketPriorityId != newTicket.TicketPriorityId)
-//{
-//    TicketHistory history = new TicketHistory
-//    {
-//        TicketId = newTicket.Id,
-//        Property = "Ticket Priority",
-//        OldValue = oldTicket.TicketPriority.Name,
-//        NewValue = newTicket.TicketPriority.Name,
-//        Created = DateTimeOffset.Now,
-//        UserId = userId
-//    };
-//    await _context.TicketHistories.AddAsync(history);
-//}
-//if (oldTicket.DeveloperUserId != newTicket.DeveloperUserId)
-//{
-//    TicketHistory history = new TicketHistory
-//    {
-//        TicketId = newTicket.Id,
-//        Property = "Developer User",
-//        OldValue = oldTicket.DeveloperUser.FullName,
-//        NewValue = newTicket.DeveloperUser.FullName,
-//        Created = DateTimeOffset.Now,
-//        UserId = userId
-//    };
-//    await _context.TicketHistories.AddAsync(history);
-//}
-//if (oldTicket.TicketStatusId != newTicket.TicketStatusId)
-//{
-//    TicketHistory history = new TicketHistory
-//    {
-//        TicketId = newTicket.Id,
-//        Property = "Ticket Status",
-//        OldValue = oldTicket.TicketStatus.Name,
-//        NewValue = newTicket.TicketStatus.Name,
-//        Created = DateTimeOffset.Now,
-//        UserId = userId
-//    };
-//    await _context.TicketHistories.AddAsync(history);
-//}
-//if (oldTicket.TicketTypeId != newTicket.TicketTypeId)
-//{
-//    TicketHistory history = new TicketHistory
-//    {
-//        TicketId = newTicket.Id,
-//        Property = "Ticket Type",
-//        OldValue = oldTicket.TicketType.Name,
-//        NewValue = newTicket.TicketType.Name,
-//        Created = DateTimeOffset.Now,
-//        UserId = userId
-//    };
-//    await _context.TicketHistories.AddAsync(history);
+//    val.TicketId = oldTicket.Id;
+//    val.UserId = userId;
+//    val.Created = DateTime.Now;
+//    await _context.TicketHistories.AddAsync(val);
+//    await _context.SaveChangesAsync();
 //}
