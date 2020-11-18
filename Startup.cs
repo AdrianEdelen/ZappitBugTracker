@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using ZappitBugTracker.Models;
 using ZappitBugTracker.services;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using ZappitBugTracker.Helpers;
 
 namespace ZappitBugTracker
 {
@@ -31,8 +32,10 @@ namespace ZappitBugTracker
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(
+                    DataHelper.GetConnectionString(Configuration)));
+                    //deprecated
+                    //Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<BTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()

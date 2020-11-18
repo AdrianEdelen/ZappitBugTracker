@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ZappitBugTracker.Data;
+using ZappitBugTracker.Helpers;
 using ZappitBugTracker.Models;
 
 namespace ZappitBugTracker
@@ -19,6 +20,7 @@ namespace ZappitBugTracker
         public async static Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
+            await DataHelper.ManageData(host);
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -41,11 +43,14 @@ namespace ZappitBugTracker
             }
             host.Run();
         }
-
+        
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    //webBuilder.UseStartup<Startup>();
+                    webBuilder.CaptureStartupErrors(true);
+                    webBuilder.UseSetting(WebHostDefaults.DetailedErrorsKey, "true");
                     webBuilder.UseStartup<Startup>();
                 });
     }

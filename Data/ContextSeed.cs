@@ -56,6 +56,7 @@ namespace ZappitBugTracker.Data
             catch (Exception ex)
             {
                 Debug.WriteLine(errorMsg);
+                Debug.WriteLine(ex);
                 throw;
             }
             #endregion
@@ -105,6 +106,7 @@ namespace ZappitBugTracker.Data
             catch (Exception ex)
             {
                 Debug.WriteLine(errorMsg);
+                Debug.WriteLine(ex);
                 throw;
             }
             #endregion
@@ -181,6 +183,7 @@ namespace ZappitBugTracker.Data
             catch (Exception ex)
             {
                 Debug.WriteLine(errorMsg);
+                Debug.WriteLine(ex);
                 throw;
             }
             #endregion
@@ -232,6 +235,7 @@ namespace ZappitBugTracker.Data
             catch (Exception ex)
             {
                 Debug.WriteLine(errorMsg);
+                Debug.WriteLine(ex);
                 throw;
             }
             #endregion

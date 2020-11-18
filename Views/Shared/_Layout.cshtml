@@ -599,7 +599,17 @@
 	<script>
 		$(document).ready(function () {
 			$('table.myTable').DataTable({
-				"order": [[2, "asc"]]
+				"order": [[2, "desc"]],
+				pageLength : 5
+			});
+		});
+	</script>
+	<script>
+		$(document).ready(function () {
+			$('table.myTableHistory').DataTable({
+				"order": [[4, "desc"]],
+				pageLength : 3
+
 			});
 		});
 	</script>
