@@ -32,7 +32,7 @@ namespace ZappitBugTracker.Controllers
 
         //public async Task<IActionResult> ViewMyTickets()
         //{
-            
+
         //}
 
 
@@ -115,19 +115,16 @@ namespace ZappitBugTracker.Controllers
         #region GET/POST Create
         // GET: Tickets/Create
         [Authorize(Roles = "Admin,ProjectManager,Submitter,Developer")]
-        public IActionResult Create(int? id)
+        public IActionResult Create()
         {
-            if (id != null)
-            {
-                Ticket currentTicket = new Ticket();
-                currentTicket.ProjectId = (int)id;
-                ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
-                return View(currentTicket);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Projects");
-            }
+
+            Ticket currentTicket = new Ticket();
+            //currentTicket.ProjectId = (int)id;
+            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
+            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
+            return View(currentTicket);
+
+
         }
 
         // POST: Tickets/Create
@@ -191,51 +188,60 @@ namespace ZappitBugTracker.Controllers
         [Authorize(Roles = "Admin,ProjectManager,Developer")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,DeveloperUserId")] Ticket ticket)
         {
-            if (id != ticket.Id)
+            if (!User.IsInRole("Demo"))
             {
-                return NotFound();
-            }
-            ticket.DeveloperUser = await _context.Users.FindAsync(ticket.DeveloperUserId);
-            Ticket oldTicket = await _context.Tickets
-                .AsNoTracking()
-                .FirstOrDefaultAsync(t => t.Id == ticket.Id);
-            //ticket.DeveloperUser = _context.Tickets.Include(t => t.DeveloperUser);
-            
+                if (id != ticket.Id)
+                {
+                    return NotFound();
+                }
+                ticket.DeveloperUser = await _context.Users.FindAsync(ticket.DeveloperUserId);
+                Ticket oldTicket = await _context.Tickets
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(t => t.Id == ticket.Id);
+                //ticket.DeveloperUser = _context.Tickets.Include(t => t.DeveloperUser);
 
-            if (ModelState.IsValid)
+
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(ticket);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!TicketExists(ticket.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+
+                    //Add History
+                    string userId = _userManager.GetUserId(User);
+                    await _historyService.AddHistory(oldTicket, ticket, userId);
+
+                    ticket.Updated = DateTime.Now;
+                    return RedirectToAction("ProjectTickets", "Tickets", new { id = ticket.ProjectId });
+                    //return RedirectToAction(nameof(Index));
+                }
+                ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
+                ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
+                ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
+                ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Id", ticket.TicketPriorityId);
+                ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Id", ticket.TicketStatusId);
+                ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
+                return View(ticket);
+            }
+            else
             {
-                try
-                {
-                    _context.Update(ticket);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TicketExists(ticket.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                
-                //Add History
-                string userId = _userManager.GetUserId(User);
-                await _historyService.AddHistory(oldTicket, ticket, userId);
-
-                ticket.Updated = DateTime.Now;
-                return RedirectToAction("ProjectTickets", "Tickets", new { id = ticket.ProjectId });
-                //return RedirectToAction(nameof(Index));
+                TempData["DemoLockout"] = "Your Changes have not been saved. To make changes to the database please log in as a full user.";
+                return RedirectToAction("Details", "Tickets", new { id = ticket.Id });
             }
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
-            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
-            ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Id", ticket.TicketPriorityId);
-            ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Id", ticket.TicketStatusId);
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
-            return View(ticket);
+
         }
         #endregion 
         #region GET/POST Delete

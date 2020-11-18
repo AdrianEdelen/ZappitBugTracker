@@ -30,7 +30,7 @@ namespace ZappitBugTracker.Models
 
         [DataType(DataType.Date)]
         public DateTimeOffset? Updated { get; set; }
-
+        [Display(Name = "Project")]
         public int ProjectId { get; set; }
 
         [Display(Name = "Category")]

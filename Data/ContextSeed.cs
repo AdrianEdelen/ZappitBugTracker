@@ -15,7 +15,8 @@ namespace ZappitBugTracker.Data
         ProjectManager,
         Developer,
         Submitter,
-        NewUser
+        NewUser,
+        Demo
     }
     public static class ContextSeed
     {
@@ -27,6 +28,7 @@ namespace ZappitBugTracker.Data
             await roleManager.CreateAsync(new IdentityRole(Roles.Developer.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Roles.Submitter.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Roles.NewUser.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(Roles.Demo.ToString()));
 
         }
         //seed Users
@@ -147,6 +149,135 @@ namespace ZappitBugTracker.Data
                 {
                     await userManager.CreateAsync(defaultNewUser, "Abc&123!");
                     await userManager.AddToRoleAsync(defaultNewUser, Roles.NewUser.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(errorMsg);
+                Debug.WriteLine(ex);
+                throw;
+            }
+            #endregion
+            var demoPassword = "Xyz%987$";
+            #region demo defaultadmin
+            defaultAdmin = new BTUser
+            {
+                UserName = "demoadmin@mailinator.com",
+                Email = "demoadmin@mailinator.com",
+                FirstName = "admin",
+                LastName = "istrator",
+                EmailConfirmed = true
+            };
+            try
+            {
+                var user = await userManager.FindByEmailAsync(defaultAdmin.Email);
+                if (user == null)
+                {
+                    await userManager.CreateAsync(defaultAdmin, demoPassword);
+                    await userManager.AddToRoleAsync(defaultAdmin, Roles.Admin.ToString());
+                    await userManager.AddToRoleAsync(defaultAdmin, Roles.Demo.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(errorMsg);
+                throw;
+            }
+            #endregion
+            #region demo defaultProjectManager
+            defaultProjectManager = new BTUser
+            {
+                UserName = "demopm@mailinator.com",
+                Email = "demopm@mailinator.com",
+                FirstName = "Project",
+                LastName = "Manager",
+                EmailConfirmed = true
+            };
+            try
+            {
+                var user = await userManager.FindByEmailAsync(defaultProjectManager.Email);
+                if (user == null)
+                {
+                    await userManager.CreateAsync(defaultProjectManager, demoPassword);
+                    await userManager.AddToRoleAsync(defaultProjectManager, Roles.ProjectManager.ToString());
+                    await userManager.AddToRoleAsync(defaultProjectManager, Roles.Demo.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(errorMsg);
+                Debug.WriteLine(ex);
+                throw;
+            }
+            #endregion
+            #region demo defaultDeveloper
+            defaultDeveloper = new BTUser
+            {
+                UserName = "demodev@mailinator.com",
+                Email = "demodev@mailinator.com",
+                FirstName = "Dev",
+                LastName = "Eloper",
+                EmailConfirmed = true
+            };
+            try
+            {
+                var user = await userManager.FindByEmailAsync(defaultDeveloper.Email);
+                if (user == null)
+                {
+                    await userManager.CreateAsync(defaultDeveloper, demoPassword);
+                    await userManager.AddToRoleAsync(defaultDeveloper, Roles.Developer.ToString());
+                    await userManager.AddToRoleAsync(defaultDeveloper, Roles.Demo.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(errorMsg);
+                throw;
+            }
+            #endregion
+            #region demo defaultSubmitter
+            defaultSubmitter = new BTUser
+            {
+                UserName = "demosubmitter@mailinator.com",
+                Email = "demosubmitter@mailinator.com",
+                FirstName = "Sub",
+                LastName = "Mitter",
+                EmailConfirmed = true
+            };
+            try
+            {
+                var user = await userManager.FindByEmailAsync(defaultSubmitter.Email);
+                if (user == null)
+                {
+                    await userManager.CreateAsync(defaultSubmitter, demoPassword);
+                    await userManager.AddToRoleAsync(defaultSubmitter, Roles.Submitter.ToString());
+                    await userManager.AddToRoleAsync(defaultSubmitter, Roles.Demo.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(errorMsg);
+                Debug.WriteLine(ex);
+                throw;
+            }
+            #endregion
+            #region demo defaultNewUser
+            defaultNewUser = new BTUser
+            {
+                UserName = "demonewuser@mailinator.com",
+                Email = "demonewuser@mailinator.com",
+                FirstName = "new",
+                LastName = "user",
+                EmailConfirmed = true
+            };
+            try
+            {
+                var user = await userManager.FindByEmailAsync(defaultNewUser.Email);
+                if (user == null)
+                {
+                    await userManager.CreateAsync(defaultNewUser, demoPassword);
+                    await userManager.AddToRoleAsync(defaultNewUser, Roles.NewUser.ToString());
+                    await userManager.AddToRoleAsync(defaultNewUser, Roles.Demo.ToString());
                 }
             }
             catch (Exception ex)

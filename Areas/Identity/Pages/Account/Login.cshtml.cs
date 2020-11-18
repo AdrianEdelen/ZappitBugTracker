@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using ZappitBugTracker.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace ZappitBugTracker.Areas.Identity.Pages.Account
 {
@@ -19,14 +20,17 @@ namespace ZappitBugTracker.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly UserManager<BTUser> _userManager;
+        private readonly IConfiguration _configuration;
         private readonly SignInManager<BTUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
         public LoginModel(SignInManager<BTUser> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<BTUser> userManager)
+            UserManager<BTUser> userManager,
+            IConfiguration configuration)
         {
             _userManager = userManager;
+            _configuration = configuration;
             _signInManager = signInManager;
             _logger = logger;
         }
@@ -72,9 +76,28 @@ namespace ZappitBugTracker.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string demoEmail = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
+
+            if (!String.IsNullOrWhiteSpace(demoEmail))
+            {
+                var email = _configuration[demoEmail];
+                var password = _configuration["DemoPassword"];
+
+                var result = await _signInManager.PasswordSignInAsync(email, password, false, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User logged in.");
+                    return RedirectToAction("Index", "Home");
+                    //this may need to be changed depending on where landing page is
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
+                }
+            }
 
             if (ModelState.IsValid)
             {
