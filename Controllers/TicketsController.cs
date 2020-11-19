@@ -149,7 +149,7 @@ namespace ZappitBugTracker.Controllers
             {
                 ViewData["ProjectId"] = new SelectList(await _projectService.ListUserProjectsAsync(currentUser.Id), "Id", "Name");
             }
-            ViewData["ProjectId"] = new SelectList(await _projectService.ListUserProjectsAsync(currentUser.Id), "Id", "Name");
+            //ViewData["ProjectId"] = new SelectList(await _projectService.ListUserProjectsAsync(currentUser.Id), "Id", "Name");
             return View(currentTicket);
         }
 
@@ -157,20 +157,20 @@ namespace ZappitBugTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ProjectManager,Submitter,Developer")]
-        public async Task<IActionResult> Create([Bind("ProjectId,Title,Description,TicketTypeId")] Ticket ticket)
+        public async Task<IActionResult> Create([Bind("Id,ProjectId,Title,Description,TicketTypeId")] Ticket ticket)
         {
 
             if (ModelState.IsValid)
             {
                 _context.Add(ticket);
                 ticket.Created = DateTime.Now;
-                ticket.TicketPriorityId = 1;
-                ticket.TicketStatusId = 1;
-                ticket.OwnerUser = await _userManager.GetUserAsync(User);
+                ticket.TicketPriorityId = (await _context.TicketPriority.FirstOrDefaultAsync(p => p.Name == "New")).Id;
+                ticket.TicketStatusId = (await _context.TicketStatus.FirstOrDefaultAsync(s => s.Name == "Unassigned")).Id;
+                ticket.OwnerUserId = _userManager.GetUserId(User);
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction("ProjectTickets", "Tickets", new { id = ticket.ProjectId });
-
+                return RedirectToAction("Index", "Home");
+                //add a sweet alert on succesful ticket submission
             }
 
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);

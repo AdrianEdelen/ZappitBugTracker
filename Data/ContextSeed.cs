@@ -375,7 +375,7 @@ namespace ZappitBugTracker.Data
             }
 
         }
-        public static async Task seedDefaultTicketType(ApplicationDbContext context)
+        public static async Task SeedDefaultTicketType(ApplicationDbContext context)
         {
             var defaultSeedBug = new TicketType
             {
@@ -411,6 +411,63 @@ namespace ZappitBugTracker.Data
             catch (Exception ex)
             {
                 Debug.WriteLine("**** Error Adding Default Ticket type Feature ****");
+                Debug.WriteLine(ex.Message);
+            }
+        }
+        public static async Task SeedDefaultStatusType(ApplicationDbContext context)
+        {
+            var defaultSeedUnassigned = new TicketStatus
+            {
+                Name = "Unassigned"
+            };
+            var defaultSeedOpen = new TicketStatus
+            {
+                Name = "Open"
+            };
+            var defaultSeedClosed = new TicketStatus
+            {
+                Name = "Closed"
+            };
+            try
+            {
+                var ticketStatus = await context.TicketStatus.Where(t => t.Name == "Unassigned").FirstOrDefaultAsync();
+                if (ticketStatus == null)
+                {
+                    await context.TicketStatus.AddAsync(defaultSeedUnassigned);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Default Ticket Status Unassigned ****");
+                Debug.WriteLine(ex.Message);
+            }
+            try
+            {
+                var ticketStatus = await context.TicketStatus.Where(t => t.Name == "Open").FirstOrDefaultAsync();
+                if (ticketStatus == null)
+                {
+                    await context.TicketStatus.AddAsync(defaultSeedOpen);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Default Ticket Status Open ****");
+                Debug.WriteLine(ex.Message);
+            }
+            try
+            {
+                var ticketStatus = await context.TicketStatus.Where(t => t.Name == "Closed").FirstOrDefaultAsync();
+                if (ticketStatus == null)
+                {
+                    await context.TicketStatus.AddAsync(defaultSeedClosed);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Default Ticket Status Closed ****");
                 Debug.WriteLine(ex.Message);
             }
         }
