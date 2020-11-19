@@ -34,7 +34,7 @@ namespace ZappitBugTracker.Controllers
         
         #region GET/POST ManageUserRoles
         //GET Manage User Roles
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> ManageUserRoles()
         {
             List<ManageUserRolesViewModel> model = new List<ManageUserRolesViewModel>();
@@ -54,7 +54,7 @@ namespace ZappitBugTracker.Controllers
 
         // HTTP POST Manage User Roles
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> ManageUserRoles(ManageUserRolesViewModel btuser)
         {
             BTUser user = await _context.Users.FindAsync(btuser.User.Id);

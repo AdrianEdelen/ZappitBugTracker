@@ -83,19 +83,26 @@ namespace ZappitBugTracker.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
+            
+
+            return View(await _context.Projects.ToListAsync());
+        }
+        #endregion
+        #region GET YourProjects
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> YourProjects()
+        {
             var user = await _userManager.GetUserAsync(User);
 
-            if (await _rolesService.IsUserInRole(user, "Admin"))
-            {
-                return View(await _context.Projects.ToListAsync());
-            };
-            if (await _rolesService.IsUserInRole(user, "ProjectManager"))
-            {
-                return View(await _context.Projects.ToListAsync());
-            };
 
             return View(await _projectService.ListUserProjectsAsync(user.Id));
         }
+
+
+
+
+
         #endregion
         #region GET details
         // GET: Identity/Projects/Details/5

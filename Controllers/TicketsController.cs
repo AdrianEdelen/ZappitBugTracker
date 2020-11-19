@@ -20,24 +20,44 @@ namespace ZappitBugTracker.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTHistoryService _historyService;
+        private readonly IBTProjectService _projectService;
+        private readonly IBTRolesService _rolesService;
         #endregion
         #region Constructors
-        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTHistoryService historyService)
+        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTHistoryService historyService, IBTProjectService projectService, IBTRolesService rolesService)
         {
             _context = context;
             _userManager = userManager;
             _historyService = historyService;
+            _projectService = projectService;
+            _rolesService = rolesService;
         }
         #endregion
 
-        //public async Task<IActionResult> ViewMyTickets()
+        //GET AllTickets
+        #region Get/post all tickets
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
+        public async Task<IActionResult> AllTickets()
+        {
+            var applicationDbContext = _context.Tickets
+                .Include(t => t.DeveloperUser)
+                .Include(t => t.OwnerUser)
+                .Include(t => t.Project)
+                .Include(t => t.TicketPriority)
+                .Include(t => t.TicketStatus)
+                .Include(t => t.TicketType);
+            return View(await applicationDbContext.ToListAsync());
+        }
+        //POST AllTickets
+        //[HttpPost]
+        //[Authorize(Roles = "Admin,ProjectManager")]
+        //public async Task<IActionResult> AllTickets()
         //{
-
+        //    return View();
         //}
 
 
-
-
+        #endregion
         #region GET Project Tickets
         //GET Project Tickets
         [Authorize]
@@ -68,8 +88,8 @@ namespace ZappitBugTracker.Controllers
             return View(projectTickets);
 
         }
-        #endregion
-        #region GET Index
+#endregion
+#region GET Index
         // GET: Tickets
         [Authorize]
         public async Task<IActionResult> Index()
@@ -83,8 +103,8 @@ namespace ZappitBugTracker.Controllers
                 .Include(t => t.TicketType);
             return View(await applicationDbContext.ToListAsync());
         }
-        #endregion
-        #region GET Details
+#endregion
+#region GET Details
         // GET: Tickets/Details/5
         [Authorize]
         public async Task<IActionResult> Details(int? id)
@@ -111,20 +131,27 @@ namespace ZappitBugTracker.Controllers
 
             return View(ticket);
         }
-        #endregion
-        #region GET/POST Create
+#endregion
+#region GET/POST Create
         // GET: Tickets/Create
         [Authorize(Roles = "Admin,ProjectManager,Submitter,Developer")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
 
             Ticket currentTicket = new Ticket();
-            //currentTicket.ProjectId = (int)id;
+            var currentUser = await _userManager.GetUserAsync(User);
+ 
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
+            if (await _rolesService.IsUserInRole(currentUser, "admin"))
+            {
+                ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
+            }
+            else
+            {
+                ViewData["ProjectId"] = new SelectList(await _projectService.ListUserProjectsAsync(currentUser.Id), "Id", "Name");
+            }
+            ViewData["ProjectId"] = new SelectList(await _projectService.ListUserProjectsAsync(currentUser.Id), "Id", "Name");
             return View(currentTicket);
-
-
         }
 
         // POST: Tickets/Create
@@ -155,8 +182,8 @@ namespace ZappitBugTracker.Controllers
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
             return View(ticket);
         }
-        #endregion
-        #region GET/POST Edit
+#endregion
+#region GET/POST Edit
         // GET: Tickets/Edit/5
         [Authorize(Roles = "Admin,ProjectManager,Developer")]
         public async Task<IActionResult> Edit(int? id)
@@ -243,8 +270,8 @@ namespace ZappitBugTracker.Controllers
             }
 
         }
-        #endregion 
-        #region GET/POST Delete
+#endregion
+#region GET/POST Delete
         // GET: Tickets/Delete/5
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
@@ -281,8 +308,8 @@ namespace ZappitBugTracker.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        #endregion
-        #region Ticket Attachments
+#endregion
+#region Ticket Attachments
         [HttpPost]
         public async Task<IActionResult> CreateAttachment(int ticketId, string description, IFormFile attachment)
         {
@@ -299,7 +326,7 @@ namespace ZappitBugTracker.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", "Tickets", new { id = ticketId });
         }
-        #endregion
+#endregion
         private bool TicketExists(int id)
         {
             return _context.Tickets.Any(e => e.Id == id);

@@ -33,11 +33,12 @@ namespace ZappitBugTracker.services
             return result;
         }
 
-        public async Task<ICollection<Project>> ListUserProjectsAsync(string userId)
+        public async Task<List<Project>> ListUserProjectsAsync(string userId)
         {
             BTUser user = await _context.Users
                 .Include(p => p.ProjectUsers)
                 .ThenInclude(p => p.Project)
+                .ThenInclude(p => p.Tickets)
                 .FirstOrDefaultAsync(p => p.Id == userId);
             List<Project> projects = user.ProjectUsers.Select(p => p.Project).ToList();
             return projects;
