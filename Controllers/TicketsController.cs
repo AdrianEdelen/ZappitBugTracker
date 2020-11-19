@@ -309,7 +309,7 @@ namespace ZappitBugTracker.Controllers
             return RedirectToAction(nameof(Index));
         }
 #endregion
-#region Ticket Attachments
+#region CreateAttachment
         [HttpPost]
         public async Task<IActionResult> CreateAttachment(int ticketId, string description, IFormFile attachment)
         {
