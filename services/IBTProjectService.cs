@@ -1,7 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZappitBugTracker.Models;
 using Project = ZappitBugTracker.Models.Project;

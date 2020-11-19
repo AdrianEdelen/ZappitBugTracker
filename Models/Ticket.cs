@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ZappitBugTracker.Models
 {
@@ -68,7 +65,7 @@ namespace ZappitBugTracker.Models
         public virtual ICollection<Notification> Notifications { get; set; }
 
         public virtual ICollection<TicketHistory> Histories { get; set; }
-        
+
         public Dictionary<string, dynamic> GetPropertiesForCompare()
         {
             return new Dictionary<string, dynamic>()

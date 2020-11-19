@@ -1,18 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using ZappitBugTracker.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace ZappitBugTracker.Areas.Identity.Pages.Account
 {
@@ -24,7 +22,7 @@ namespace ZappitBugTracker.Areas.Identity.Pages.Account
         private readonly SignInManager<BTUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<BTUser> signInManager, 
+        public LoginModel(SignInManager<BTUser> signInManager,
             ILogger<LoginModel> logger,
             UserManager<BTUser> userManager,
             IConfiguration configuration)

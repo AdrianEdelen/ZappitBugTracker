@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using ZappitBugTracker.Data;
 using ZappitBugTracker.Models;
 
@@ -50,9 +49,9 @@ namespace ZappitBugTracker.Controllers
             {
                 return NotFound();
             }
-            
+
             var ticketComments = await _context.TicketComments
-                
+
                 .Include(t => t.Ticket)
                 .Include(t => t.User)
                 .Where(t => t.TicketId == id)
@@ -82,12 +81,12 @@ namespace ZappitBugTracker.Controllers
                 ticketComment.Created = DateTime.Now;
                 ticketComment.UserId = _userManager.GetUserId(User);
 
-                
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
 
             }
-            return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId});
+            return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
         }
         #endregion
         #region GET/POST Edit

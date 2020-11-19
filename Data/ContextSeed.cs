@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -323,7 +322,7 @@ namespace ZappitBugTracker.Data
                     await context.TicketPriority.AddAsync(defaultSeedNew);
                     await context.SaveChangesAsync();
                 }
-            } 
+            }
             catch (Exception ex)
             {
                 Debug.WriteLine("**** Error Adding Default Ticket Priority New ****");

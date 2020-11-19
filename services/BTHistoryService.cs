@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using ZappitBugTracker.Data;
 using ZappitBugTracker.Models;
@@ -18,7 +14,7 @@ namespace ZappitBugTracker.services
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
         private readonly IEmailSender _emailSender;
-        
+
         public BTHistoryService(ApplicationDbContext context, UserManager<BTUser> userManager, IEmailSender emailSender)
         {
             _context = context;
@@ -40,7 +36,7 @@ namespace ZappitBugTracker.services
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
-                
+
             }
             if (oldTicket.Description != newTicket.Description)
             {
@@ -54,7 +50,7 @@ namespace ZappitBugTracker.services
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
-                
+
             }
             if (oldTicket.TicketPriorityId != newTicket.TicketPriorityId)
             {
