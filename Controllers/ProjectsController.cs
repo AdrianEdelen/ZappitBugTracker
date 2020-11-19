@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +13,6 @@ using ZappitBugTracker.services;
 
 namespace ZappitBugTracker.Controllers
 {
-
     public class ProjectsController : Controller
     {
         #region Private Fields
@@ -23,7 +21,6 @@ namespace ZappitBugTracker.Controllers
         private readonly IBTAccessService _accessService;
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTRolesService _rolesService;
-
         #endregion
         #region constructors
         public ProjectsController(ApplicationDbContext context, IBTProjectService projectService, IBTAccessService accessService, UserManager<BTUser> userManager, IBTRolesService rolesService)
@@ -83,8 +80,6 @@ namespace ZappitBugTracker.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            
-
             return View(await _context.Projects.ToListAsync());
         }
         #endregion
@@ -94,34 +89,7 @@ namespace ZappitBugTracker.Controllers
         public async Task<IActionResult> YourProjects()
         {
             var user = await _userManager.GetUserAsync(User);
-
-
             return View(await _projectService.ListUserProjectsAsync(user.Id));
-        }
-
-
-
-
-
-        #endregion
-        #region GET details
-        // GET: Identity/Projects/Details/5
-        [Authorize]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var project = await _context.Projects
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            return View(project);
         }
         #endregion
         #region GET/POST Create
@@ -155,7 +123,6 @@ namespace ZappitBugTracker.Controllers
             {
                 return NotFound();
             }
-
             var project = await _context.Projects.FindAsync(id);
             if (project == null)
             {
@@ -195,37 +162,6 @@ namespace ZappitBugTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(project);
-        }
-        #endregion
-        #region GET/POST delete
-        // GET: Identity/Projects/Delete/5
-        [Authorize(Roles = "Admin,ProjectManager")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var project = await _context.Projects
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            return View(project);
-        }
-        // POST: Identity/Projects/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,ProjectManager")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var project = await _context.Projects.FindAsync(id);
-            _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
         #endregion
         private bool ProjectExists(int id)

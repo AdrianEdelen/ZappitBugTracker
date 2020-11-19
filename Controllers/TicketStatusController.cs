@@ -30,26 +30,6 @@ namespace ZappitBugTracker.Controllers
             return View(await _context.TicketStatus.ToListAsync());
         }
         #endregion
-        #region GET Details
-        // GET: TicketStatus/Details/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var ticketStatus = await _context.TicketStatus
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ticketStatus == null)
-            {
-                return NotFound();
-            }
-
-            return View(ticketStatus);
-        }
-        #endregion
         #region GET/POST Create
         // GET: TicketStatus/Create
         [Authorize(Roles = "Admin")]
@@ -68,58 +48,6 @@ namespace ZappitBugTracker.Controllers
             {
                 _context.Add(ticketStatus);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(ticketStatus);
-        }
-        #endregion
-        #region GET/POST Edit
-        // GET: TicketStatus/Edit/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var ticketStatus = await _context.TicketStatus.FindAsync(id);
-            if (ticketStatus == null)
-            {
-                return NotFound();
-            }
-            return View(ticketStatus);
-        }
-
-        // POST: TicketStatus/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] TicketStatus ticketStatus)
-        {
-            if (id != ticketStatus.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(ticketStatus);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TicketStatusExists(ticketStatus.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
             return View(ticketStatus);
