@@ -40,11 +40,15 @@ namespace ZappitBugTracker
             services.AddScoped<IBTProjectService, BTProjectService>();
             services.AddScoped<IBTHistoryService, BTHistoryService>();
             services.AddScoped<IBTAccessService, BTAccessService>();
+            services.AddScoped<IBTImageService, BTImageService>();
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IEmailSender, EmailService>();
 
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

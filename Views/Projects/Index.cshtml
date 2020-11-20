@@ -3,6 +3,7 @@
 @inject ZappitBugTracker.services.IBTRolesService rolesService
 @inject ZappitBugTracker.services.IBTProjectService projectService
 @inject ZappitBugTracker.services.IBTAccessService accessService
+@inject ZappitBugTracker.services.IBTImageService imageService
 
 @{
 	var user = await userManager.GetUserAsync(User);
@@ -22,10 +23,7 @@
 				@Html.DisplayNameFor(model => model.Name)
 			</th>
 			<th>
-				@Html.DisplayNameFor(model => model.ImagePath)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.ImageData)
+				Image
 			</th>
 			<th></th>
 		</tr>
@@ -41,10 +39,7 @@
 
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => item.ImagePath)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.ImageData)
+					<img src="@imageService.DecodeImage(item.ImageData, item.ImagePath)" class="img-fluid maxImage200x200" />
 				</td>
 				<td>
 					@if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))

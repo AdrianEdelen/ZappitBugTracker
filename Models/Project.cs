@@ -14,6 +14,7 @@ namespace ZappitBugTracker.Models
             Tickets = new HashSet<Ticket>();
         }
         public int Id { get; set; }
+
         [Required]
         [StringLength(50)]
         [Display(Name = "Project Name")]
@@ -21,7 +22,7 @@ namespace ZappitBugTracker.Models
 
         [Display(Name = "Project Image")]
         public string ImagePath { get; set; }
-        [NotMapped]
+
         [DisplayName("Upload Project Logo")]
         [DataType(DataType.Upload)]
         [MaxFileSize(2 * 1024 * 1024)]

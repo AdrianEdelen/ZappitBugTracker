@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ZappitBugTracker.Data;
 using ZappitBugTracker.Models;
@@ -24,6 +25,10 @@ namespace ZappitBugTracker.services
 
         public async Task AddHistory(Ticket oldTicket, Ticket newTicket, string userId)
         {
+
+            var ticketStatuses = _context.TicketStatus.ToList();
+            var ticketPriorities = _context.TicketPriority.ToList();
+
             if (oldTicket.Title != newTicket.Title)
             {
                 TicketHistory history = new TicketHistory
@@ -36,6 +41,7 @@ namespace ZappitBugTracker.services
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
+                
 
             }
             if (oldTicket.Description != newTicket.Description)
@@ -58,8 +64,8 @@ namespace ZappitBugTracker.services
                 {
                     TicketId = newTicket.Id,
                     Property = "Ticket Priority",
-                    OldValue = oldTicket.TicketPriority.Name,
-                    NewValue = newTicket.TicketPriority.Name,
+                    OldValue = ticketPriorities.FirstOrDefault(t => t.Id == oldTicket.TicketPriorityId).Name,
+                    NewValue = ticketPriorities.FirstOrDefault(t => t.Id == newTicket.TicketPriorityId).Name,
                     Created = DateTimeOffset.Now,
                     UserId = userId
                 };
@@ -84,8 +90,8 @@ namespace ZappitBugTracker.services
                 {
                     TicketId = newTicket.Id,
                     Property = "Ticket Status",
-                    OldValue = oldTicket.TicketStatus.Name,
-                    NewValue = newTicket.TicketStatus.Name,
+                    OldValue = ticketStatuses.FirstOrDefault(t => t.Id == oldTicket.TicketStatusId).Name,
+                    NewValue = ticketStatuses.FirstOrDefault(t => t.Id == newTicket.TicketStatusId).Name,
                     Created = DateTimeOffset.Now,
                     UserId = userId
                 };
@@ -104,7 +110,7 @@ namespace ZappitBugTracker.services
                 };
                 await _context.TicketHistories.AddAsync(history);
             }
-
+            await _context.SaveChangesAsync();
             Notification notification = new Notification
             {
                 TicketId = newTicket.Id,
@@ -116,17 +122,15 @@ namespace ZappitBugTracker.services
             await _context.Notifications.AddAsync(notification);
 
             //send email
+            var ticketName = newTicket.Title;
             var projectName = await _context.Users.FindAsync(newTicket.DeveloperUserId);
             string devEmail = newTicket.DeveloperUser.Email;
-            string subject = "New Ticket Assignment";
-            string message = $"You have a new ticket for project: {projectName}";
+            string subject = "A Ticket You Are Assigned To Has Changed.";
+            string message = $"The Ticket: {ticketName}, in project: {projectName}. Has Changed. Please Login to you dashboard and review the changes.";
             await _emailSender.SendEmailAsync(devEmail, subject, message);
         }
 
-        private void SendEmailAsync()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public IEnumerable<TicketHistory> GenerateTicketHistories(Ticket oldTicket, Ticket newTicket)
         {
