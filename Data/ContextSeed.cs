@@ -293,7 +293,37 @@ namespace ZappitBugTracker.Data
         }
         //public static async Task SeedDefaultprojectsTicketsComments(ApplicationDbContext context)
         //{
+        //    //set this bool to false if you do not want to seed fake projects, Tickets, and comments.
+        //    bool seedFakeContent = true;
+        //    if (seedFakeContent)
+        //    {
+        //        var project1 = new Project
+        //        {
+        //            Name = "It Department",
+        //            Tickets = [new Ticket { ProjectId = 1, }]
+        //        };
+        //        var project2 = new Project
+        //        {
+        //            Name = "Marketing Department"
+        //        };
+        //        var project3 = new Project
+        //        {
+        //            Name = "Finance Department"
+        //        };
+        //        var project4 = new Project
+        //        {
+        //            Name = "Maintenance Department"
+        //        };
+        //        var project5 = new Project
+        //        {
+        //            Name = "Facilities Department"
+        //        };
+        //        var ticket1 = new Ticket
+        //        {
 
+        //        }
+        //        var ticket2 = n
+        //    }
         //}
         public static async Task SeedDefaultTicketPriority(ApplicationDbContext context)
         {

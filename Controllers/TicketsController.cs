@@ -192,7 +192,11 @@ namespace ZappitBugTracker.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets.FindAsync(id);
+            var ticket = await _context.Tickets
+                .Include(t => t.TicketStatus)
+                .Include(t => t.TicketPriority)
+                .Include(t => t.OwnerUser)
+                .FirstOrDefaultAsync(i => i.Id == id);
             if (ticket == null)
             {
                 return NotFound();
