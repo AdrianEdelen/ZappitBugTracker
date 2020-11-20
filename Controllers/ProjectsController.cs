@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,6 +11,7 @@ using ZappitBugTracker.Data;
 using ZappitBugTracker.Models;
 using ZappitBugTracker.Models.ViewModels;
 using ZappitBugTracker.services;
+using ZappitBugTracker.Helpers;
 
 namespace ZappitBugTracker.Controllers
 {
@@ -21,15 +23,19 @@ namespace ZappitBugTracker.Controllers
         private readonly IBTAccessService _accessService;
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTRolesService _rolesService;
+        private readonly IBTImageService _imageService;
+       
+
         #endregion
         #region constructors
-        public ProjectsController(ApplicationDbContext context, IBTProjectService projectService, IBTAccessService accessService, UserManager<BTUser> userManager, IBTRolesService rolesService)
+        public ProjectsController(ApplicationDbContext context, IBTProjectService projectService, IBTAccessService accessService, UserManager<BTUser> userManager, IBTRolesService rolesService, IBTImageService imageService)
         {
             _context = context;
             _projectService = projectService;
             _accessService = accessService;
             _userManager = userManager;
             _rolesService = rolesService;
+            _imageService = imageService;
         }
         #endregion
         #region GET/POST AddProjectUsers
@@ -80,6 +86,7 @@ namespace ZappitBugTracker.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
+            
             return View(await _context.Projects.ToListAsync());
         }
         #endregion
@@ -103,10 +110,15 @@ namespace ZappitBugTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ProjectManager")]
-        public async Task<IActionResult> Create([Bind("Id,Name,ImagePath,ImageData")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,Name,ImagePath,ImageData")] Project project, IFormFile imageData)
         {
             if (ModelState.IsValid)
             {
+                if (imageData != null)
+                {
+                    project.ImagePath = imageData.FileName;
+                    project.ImageData = _imageService.EncodeImage(imageData);
+                }
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
