@@ -29,7 +29,6 @@ namespace ZappitBugTracker.services
             var ticketStatuses = _context.TicketStatus.ToList();
             var ticketPriorities = _context.TicketPriority.ToList();
             var ticketTypes = _context.TicketTypes.ToList();
-            //var devUser = _context.Users.ToList();
 
             if (oldTicket.Title != newTicket.Title)
             {
@@ -77,9 +76,7 @@ namespace ZappitBugTracker.services
                     TicketId = newTicket.Id,
                     Property = "Developer User", 
                     OldValue = oldTicket.DeveloperUser == null ? "No Developer Assigned" : oldTicket.DeveloperUser.FullName,
-                    //OldValue = devUser.FirstOrDefault(u => u.Id == oldTicket.DeveloperUserId).FullName,
                     NewValue = newTicket.DeveloperUser == null ? "No Developer Assigned" : newTicket.DeveloperUser.FullName,
-                    //NewValue = devUser.FirstOrDefault(u => u.Id == newTicket.DeveloperUserId).FullName,
                     Created = DateTimeOffset.Now,
                     UserId = userId
                 };

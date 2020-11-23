@@ -72,3 +72,6 @@ body {
 .maxImage200x200 {
     max-height: 200px;
 }
+div.dataTables_length {
+    display: none;
+}

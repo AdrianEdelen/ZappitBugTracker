@@ -19,197 +19,177 @@
 	<div class="row mb-4">
 		<!-- Description -->
 		<div class="col">
-			<div class="card shadow mb-4 h-100">
-				<div class="card-header py-3">
-					<h6 class="m-0 font-weight-bold text-primary">Description</h6>
+			<div class="row mb-4">
+				<div class="col">
+					<div class="card shadow mb-4 h-100">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">Description</h6>
+						</div>
+						<div class="card-body">
+							@Html.DisplayFor(model => model.Description)
+						</div>
+					</div>
 				</div>
-				<div class="card-body">
-					@Html.DisplayFor(model => model.Description)
+			</div>
+			<div class="row">
+				<!-- Details -->
+				<div class="col">
+					<div class="card shadow mb-4 h-100">
+						@if (Model.TicketPriorityId == 1)
+						{
+							<div class="card-header py-3 bg-info">
+								<h6 class="m-0 font-weight-bold text-dark">
+									Ticket Details
+									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
+						 || await rolesService.IsUserInRole(user, "Admin")
+						 || (await rolesService.IsUserInRole(user, "ProjectManager")
+						 && await projectService.IsUserOnProject(userId, Model.ProjectId))
+						 || userId == Model.OwnerUserId)
+									{<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>}
+								</h6>
+							</div>
+						}
+						@if (Model.TicketPriorityId == 2)
+						{
+							<div class="card-header py-3 bg-success">
+								<h6 class="m-0 font-weight-bold text-dark">
+									Ticket Details
+									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
+						 || await rolesService.IsUserInRole(user, "Admin")
+						 || (await rolesService.IsUserInRole(user, "ProjectManager")
+						 && await projectService.IsUserOnProject(userId, Model.ProjectId))
+						 || userId == Model.OwnerUserId)
+									{
+										<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
+									}
+								</h6>
+							</div>
+						}
+						@if (Model.TicketPriorityId == 3)
+						{
+							<div class="card-header py-3 bg-warning">
+								<h6 class="m-0 font-weight-bold text-dark">
+									Ticket Details
+									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
+						 || await rolesService.IsUserInRole(user, "Admin")
+						 || (await rolesService.IsUserInRole(user, "ProjectManager")
+						 && await projectService.IsUserOnProject(userId, Model.ProjectId))
+						 || userId == Model.OwnerUserId)
+									{
+										<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
+									}
+								</h6>
+							</div>
+						}
+						@if (Model.TicketPriorityId == 4)
+						{
+							<div class="card-header py-3 bg-danger">
+								<h6 class="m-0 font-weight-bold text-dark">
+									Ticket Details
+									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
+						 || await rolesService.IsUserInRole(user, "Admin")
+						 || (await rolesService.IsUserInRole(user, "ProjectManager")
+						 && await projectService.IsUserOnProject(userId, Model.ProjectId))
+						 || userId == Model.OwnerUserId)
+									{
+										<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
+									}
+								</h6>
+							</div>
+						}
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<dl>
+										<dt class="">
+											Created Date
+										</dt>
+										<dd class="col-sm-10">
+											@Html.DisplayFor(model => model.Created)
+										</dd>
+										@if (Model.Updated != null)
+										{
+											<dt class="">
+												Updated Date
+											</dt>
+											<dd class="col-sm-10">
+												@Html.DisplayFor(model => model.Updated)
+											</dd>
+										}
+										else
+										{
+											<dt class="">
+												Updated Date
+											</dt>
+											<dd class="col-sm-10">
+												Not Applicable
+											</dd>
+										}
+										<dt class="">
+											Priority
+										</dt>
+										<dd class="col-sm-10">
+											@Html.DisplayFor(model => model.TicketPriority.Name)
+										</dd>
+										<dt class="">
+											Status
+										</dt>
+										<dd class="col-sm-10">
+											@Html.DisplayFor(model => model.TicketStatus.Name)
+										</dd>
+
+									</dl>
+								</div>
+								<div class="col">
+									<dl>
+
+										<dt class="">
+											Project Name
+										</dt>
+										<dd class="col-sm-10">
+											@Html.DisplayFor(model => model.Project.Name)
+										</dd>
+										<dt class="">
+											Category
+										</dt>
+										<dd class="col-sm-10">
+											@Html.DisplayFor(model => model.TicketType.Name)
+										</dd>
+										<dt class="">
+											Ticket Creator
+										</dt>
+										<dd class="col-sm-10">
+											@Html.DisplayFor(model => model.OwnerUser.FullName)
+										</dd>
+
+
+										<dt class="">
+											Assigned Developer
+										</dt>
+										@if (Model.DeveloperUserId != null)
+										{
+											<dd class="col-sm-10">
+												@Html.DisplayFor(model => model.DeveloperUser.FullName)
+											</dd>
+										}
+										else
+										{
+											<dd class="col-sm-10">
+												Unassigned
+											</dd>
+										}
+									</dl>
+								</div>
+							</div>
+						</div>
+					</div>
+					
 				</div>
+				<!-- End Details-->
 			</div>
 		</div>
 		<!-- End Description -->
-		<!-- Details -->
-		<div class="col">
-			<!-- Details -->
-			<div class="card shadow mb-4 h-100">
-				@if (Model.TicketPriorityId == 1)
-				{
-					<div class="card-header py-3 bg-info">
-						<h6 class="m-0 font-weight-bold text-dark">
-							Ticket Details
-							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-				  || await rolesService.IsUserInRole(user, "Admin")
-				  || (await rolesService.IsUserInRole(user, "ProjectManager")
-				  && await projectService.IsUserOnProject(userId, Model.ProjectId))
-				  || userId == Model.OwnerUserId)
-							{<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>}
-						</h6>
-					</div>
-				}
-				@if (Model.TicketPriorityId == 2)
-				{
-					<div class="card-header py-3 bg-success">
-						<h6 class="m-0 font-weight-bold text-dark">
-							Ticket Details
-							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-				  || await rolesService.IsUserInRole(user, "Admin")
-				  || (await rolesService.IsUserInRole(user, "ProjectManager")
-				  && await projectService.IsUserOnProject(userId, Model.ProjectId))
-				  || userId == Model.OwnerUserId)
-							{
-								<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
-							}
-						</h6>
-					</div>
-				}
-				@if (Model.TicketPriorityId == 3)
-				{
-					<div class="card-header py-3 bg-warning">
-						<h6 class="m-0 font-weight-bold text-dark">
-							Ticket Details
-							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-				  || await rolesService.IsUserInRole(user, "Admin")
-				  || (await rolesService.IsUserInRole(user, "ProjectManager")
-				  && await projectService.IsUserOnProject(userId, Model.ProjectId))
-				  || userId == Model.OwnerUserId)
-							{
-								<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
-							}
-						</h6>
-					</div>
-				}
-				@if (Model.TicketPriorityId == 4)
-				{
-					<div class="card-header py-3 bg-danger">
-						<h6 class="m-0 font-weight-bold text-dark">
-							Ticket Details
-							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-				  || await rolesService.IsUserInRole(user, "Admin")
-				  || (await rolesService.IsUserInRole(user, "ProjectManager")
-				  && await projectService.IsUserOnProject(userId, Model.ProjectId))
-				  || userId == Model.OwnerUserId)
-							{
-								<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
-							}
-						</h6>
-					</div>
-				}
-				<div class="card-body">
-					<div class="row">
-						<div class="col">
-							<dl>
-								<dt class="">
-									Created Date
-								</dt>
-								<dd class="col-sm-10">
-									@Html.DisplayFor(model => model.Created)
-								</dd>
-								@if (Model.Updated != null)
-								{
-									<dt class="">
-										Updated Date
-									</dt>
-									<dd class="col-sm-10">
-										@Html.DisplayFor(model => model.Updated)
-									</dd>
-								}
-								<dt class="">
-									Priority
-								</dt>
-								@if (Model.TicketPriorityId == 1)
-								{
-									<div class="card bg-info text-white shadow">
-										<div class="card-body">
-											<dd class="col-sm-10">
-												@Html.DisplayFor(model => model.TicketPriority.Name)
-											</dd>
-										</div>
-									</div>
-								}
-								@if (Model.TicketPriorityId == 2)
-								{
-									<div class="card bg-success text-white shadow">
-										<div class="card-body">
-											<dd class="col-sm-10">
-												@Html.DisplayFor(model => model.TicketPriority.Name)
-											</dd>
-										</div>
-									</div>
-								}
-								@if (Model.TicketPriorityId == 3)
-								{
-									<div class="card bg-warning text-white shadow">
-										<div class="card-body">
-											<dd class="col-sm-10">
-												@Html.DisplayFor(model => model.TicketPriority.Name)
-											</dd>
-										</div>
-									</div>
-								}
-								@if (Model.TicketPriorityId == 4)
-								{
-									<div class="card bg-danger text-white shadow">
-										<div class="card-body">
-											<dd class="col-sm-10">
-												@Html.DisplayFor(model => model.TicketPriority.Name)
-											</dd>
-										</div>
-									</div>
-								}
-							</dl>
-						</div>
-						<div class="col">
-							<dl>
-
-								<dt class="">
-									Project Name
-								</dt>
-								<dd class="col-sm-10">
-									@Html.DisplayFor(model => model.Project.Name)
-								</dd>
-								<dt class="">
-									Category
-								</dt>
-								<dd class="col-sm-10">
-									@Html.DisplayFor(model => model.TicketType.Name)
-								</dd>
-
-								<dt class="">
-									Status
-								</dt>
-								<dd class="col-sm-10">
-									@Html.DisplayFor(model => model.TicketStatus.Name)
-								</dd>
-								<dt class="">
-									Ticket Creator
-								</dt>
-								<dd class="col-sm-10">
-									@Html.DisplayFor(model => model.OwnerUser.FullName)
-								</dd>
-								<dt class="">
-									Assigned Developer
-								</dt>
-								@if (Model.DeveloperUserId != null)
-								{
-									<dd class="col-sm-10">
-										@Html.DisplayFor(model => model.DeveloperUser.FullName)
-									</dd>
-								}
-								else
-								{
-									<dd class="col-sm-10">
-										Unassigned
-									</dd>
-								}
-							</dl>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- End Details-->
-		</div>
-		<!-- End Details-->
+		
 		<!-- Comments-->
 		<div class="col">
 			<div class="card shadow mb-4 h-100">
@@ -218,7 +198,7 @@
 				</div>
 				<div class="card-body">
 					<div class="row">
-						<table class="table myTable" id="myTable1">
+						<table class="table myTableComments" id="myTable1">
 							<thead>
 								<tr>
 									<th>
@@ -253,10 +233,10 @@
 					<div class="row">
 						<div class="col">
 							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-|| await rolesService.IsUserInRole(user, "Admin")
-|| (await rolesService.IsUserInRole(user, "ProjectManager")
-&& await projectService.IsUserOnProject(userId, Model.ProjectId))
-|| userId == Model.OwnerUserId)
+								|| await rolesService.IsUserInRole(user, "Admin")
+								|| (await rolesService.IsUserInRole(user, "ProjectManager")
+								&& await projectService.IsUserOnProject(userId, Model.ProjectId))
+								|| userId == Model.OwnerUserId)
 							{
 								<form asp-controller="TicketComments" asp-action="Create">
 									<div asp-validation-summary="ModelOnly" class="text-danger"></div>

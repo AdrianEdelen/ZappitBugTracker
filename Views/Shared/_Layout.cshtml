@@ -21,6 +21,7 @@
 		  rel="stylesheet">
 	<!-- Custom styles for this template-->
 	<link href="~/css/sb-admin-2.min.css" rel="stylesheet" />
+	<link href="~/css/site.css" rel="stylesheet" />
 	@* Datatables *@
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
 </head>
@@ -411,13 +412,16 @@
 		<script src="vendor/chart.js/Chart.min.js"></script>
 		@* Datatables *@
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+		<!-- DataTables Plugin -->
+		<script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/plug-ins/1.10.21/features/pageResize/dataTables.pageResize.min.js"></script>
 		@* Sweet Alert *@
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 		<script>
 			$(document).ready(function () {
-				$('table.myTable').DataTable({
+				$('table.myTableComments').DataTable({
 					"order": [[2, "desc"]],
-					pageLength: 2
+					pageLength: 6,
+					//pageResize: true
 				});
 			});
 		</script>
@@ -426,6 +430,14 @@
 				$('table.myTableHistory').DataTable({
 					"order": [[4, "desc"]],
 					pageLength: 3
+				});
+			});
+		</script>
+		<script>
+			$(document).ready(function () {
+				$('table.myTableTicketsIndex').DataTable({
+					"order": [[2, "desc"]],
+					pageLength: 10
 				});
 			});
 		</script>
