@@ -28,6 +28,8 @@ namespace ZappitBugTracker.services
 
             var ticketStatuses = _context.TicketStatus.ToList();
             var ticketPriorities = _context.TicketPriority.ToList();
+            var ticketTypes = _context.TicketTypes.ToList();
+            //var devUser = _context.Users.ToList();
 
             if (oldTicket.Title != newTicket.Title)
             {
@@ -41,8 +43,6 @@ namespace ZappitBugTracker.services
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
-                
-
             }
             if (oldTicket.Description != newTicket.Description)
             {
@@ -56,7 +56,6 @@ namespace ZappitBugTracker.services
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
-
             }
             if (oldTicket.TicketPriorityId != newTicket.TicketPriorityId)
             {
@@ -76,9 +75,11 @@ namespace ZappitBugTracker.services
                 TicketHistory history = new TicketHistory
                 {
                     TicketId = newTicket.Id,
-                    Property = "Developer User",
-                    OldValue = oldTicket.DeveloperUser.FullName,
-                    NewValue = newTicket.DeveloperUser.FullName,
+                    Property = "Developer User", 
+                    OldValue = oldTicket.DeveloperUser == null ? "No Developer Assigned" : oldTicket.DeveloperUser.FullName,
+                    //OldValue = devUser.FirstOrDefault(u => u.Id == oldTicket.DeveloperUserId).FullName,
+                    NewValue = newTicket.DeveloperUser == null ? "No Developer Assigned" : newTicket.DeveloperUser.FullName,
+                    //NewValue = devUser.FirstOrDefault(u => u.Id == newTicket.DeveloperUserId).FullName,
                     Created = DateTimeOffset.Now,
                     UserId = userId
                 };
@@ -103,18 +104,18 @@ namespace ZappitBugTracker.services
                 {
                     TicketId = newTicket.Id,
                     Property = "Ticket Type",
-                    OldValue = oldTicket.TicketType.Name,
-                    NewValue = newTicket.TicketType.Name,
+                    OldValue = ticketTypes.FirstOrDefault(t => t.Id == oldTicket.TicketTypeId).Name,
+                    NewValue = ticketTypes.FirstOrDefault(t => t.Id == newTicket.TicketTypeId).Name,
                     Created = DateTimeOffset.Now,
                     UserId = userId
                 };
                 await _context.TicketHistories.AddAsync(history);
             }
-            await _context.SaveChangesAsync();
+            
             Notification notification = new Notification
             {
                 TicketId = newTicket.Id,
-                Description = "You Have A New Ticket",
+                Description = "A Ticket You Are Assigned To Has Been Updated",
                 Created = DateTimeOffset.Now,
                 SenderId = userId,
                 RecipientId = newTicket.DeveloperUserId
@@ -128,6 +129,8 @@ namespace ZappitBugTracker.services
             string subject = "A Ticket You Are Assigned To Has Changed.";
             string message = $"The Ticket: {ticketName}, in project: {projectName}. Has Changed. Please Login to you dashboard and review the changes.";
             await _emailSender.SendEmailAsync(devEmail, subject, message);
+
+            await _context.SaveChangesAsync();
         }
 
         

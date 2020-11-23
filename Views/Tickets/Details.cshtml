@@ -11,254 +11,348 @@
 	ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
+<h5>Title</h5>
+<h1>@Model.Title</h1>
+<hr />
 <div>
-	<h4>Ticket</h4>
-	<hr />
-	<!-- Ticket Details -->
-	<div class="row">
-		<div class="col-4">
-			<div class="row">
-				<div class="col">
-					<div class="card shadow mb-4">
-						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Ticket Details <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a></h6>
-						</div>
-						<div class="card-body">
-							<div class="row">
-								<div class="col">
-									<dl>
-										<dt class="">
-											Title
-										</dt>
-										<ddclass class="col-sm-10">
-											@Html.DisplayFor(model => model.Title)
-										</ddclass>
-										<dt>
-											Description
-										</dt>
-										<dd class="col-sm-10">
-											@Html.DisplayFor(model => model.Description)
-										</dd>
-										<dt class="">
-											Created Date
-										</dt>
-										<dd class="col-sm-10">
-											@Html.DisplayFor(model => model.Created)
-										</dd>
-										@if (Model.Updated != null)
-										{
-											<dt class="">
-												Updated Date
-											</dt>
+	<!-- Description and Details-->
+	<div class="row mb-4">
+		<!-- Description -->
+		<div class="col">
+			<div class="card shadow mb-4 h-100">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Description</h6>
+				</div>
+				<div class="card-body">
+					@Html.DisplayFor(model => model.Description)
+				</div>
+			</div>
+		</div>
+		<!-- End Description -->
+		<!-- Details -->
+		<div class="col">
+			<!-- Details -->
+			<div class="card shadow mb-4 h-100">
+				@if (Model.TicketPriorityId == 1)
+				{
+					<div class="card-header py-3 bg-info">
+						<h6 class="m-0 font-weight-bold text-dark">
+							Ticket Details
+							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
+				  || await rolesService.IsUserInRole(user, "Admin")
+				  || (await rolesService.IsUserInRole(user, "ProjectManager")
+				  && await projectService.IsUserOnProject(userId, Model.ProjectId))
+				  || userId == Model.OwnerUserId)
+							{<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>}
+						</h6>
+					</div>
+				}
+				@if (Model.TicketPriorityId == 2)
+				{
+					<div class="card-header py-3 bg-success">
+						<h6 class="m-0 font-weight-bold text-dark">
+							Ticket Details
+							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
+				  || await rolesService.IsUserInRole(user, "Admin")
+				  || (await rolesService.IsUserInRole(user, "ProjectManager")
+				  && await projectService.IsUserOnProject(userId, Model.ProjectId))
+				  || userId == Model.OwnerUserId)
+							{
+								<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
+							}
+						</h6>
+					</div>
+				}
+				@if (Model.TicketPriorityId == 3)
+				{
+					<div class="card-header py-3 bg-warning">
+						<h6 class="m-0 font-weight-bold text-dark">
+							Ticket Details
+							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
+				  || await rolesService.IsUserInRole(user, "Admin")
+				  || (await rolesService.IsUserInRole(user, "ProjectManager")
+				  && await projectService.IsUserOnProject(userId, Model.ProjectId))
+				  || userId == Model.OwnerUserId)
+							{
+								<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
+							}
+						</h6>
+					</div>
+				}
+				@if (Model.TicketPriorityId == 4)
+				{
+					<div class="card-header py-3 bg-danger">
+						<h6 class="m-0 font-weight-bold text-dark">
+							Ticket Details
+							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
+				  || await rolesService.IsUserInRole(user, "Admin")
+				  || (await rolesService.IsUserInRole(user, "ProjectManager")
+				  && await projectService.IsUserOnProject(userId, Model.ProjectId))
+				  || userId == Model.OwnerUserId)
+							{
+								<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
+							}
+						</h6>
+					</div>
+				}
+				<div class="card-body">
+					<div class="row">
+						<div class="col">
+							<dl>
+								<dt class="">
+									Created Date
+								</dt>
+								<dd class="col-sm-10">
+									@Html.DisplayFor(model => model.Created)
+								</dd>
+								@if (Model.Updated != null)
+								{
+									<dt class="">
+										Updated Date
+									</dt>
+									<dd class="col-sm-10">
+										@Html.DisplayFor(model => model.Updated)
+									</dd>
+								}
+								<dt class="">
+									Priority
+								</dt>
+								@if (Model.TicketPriorityId == 1)
+								{
+									<div class="card bg-info text-white shadow">
+										<div class="card-body">
 											<dd class="col-sm-10">
-												@Html.DisplayFor(model => model.Updated)
+												@Html.DisplayFor(model => model.TicketPriority.Name)
 											</dd>
-										}
-										<dt class="">
-											Priority
-										</dt>
-										<div class="card bg-warning text-white shadow">
-											<div class="card-body">
-												<dd class="col-sm-10">
-													@Html.DisplayFor(model => model.TicketPriority.Name)
-												</dd>
-											</div>
 										</div>
-
-									</dl>
-								</div>
-								<div class="col">
-									<dl>
-
-										<dt class="">
-											Project Name
-										</dt>
-										<dd class="col-sm-10">
-											@Html.DisplayFor(model => model.Project.Name)
-										</dd>
-										<dt class="">
-											Category
-										</dt>
-										<dd class="col-sm-10">
-											@Html.DisplayFor(model => model.TicketType.Name)
-										</dd>
-
-										<dt class="">
-											Status
-										</dt>
-										<dd class="col-sm-10">
-											@Html.DisplayFor(model => model.TicketStatus.Name)
-										</dd>
-										<dt class="">
-											Ticket Creator
-										</dt>
-										<dd class="col-sm-10">
-											@Html.DisplayFor(model => model.OwnerUser.FullName)
-										</dd>
-										<dt class="">
-											Assigned Developer
-										</dt>
-										@if (Model.DeveloperUserId != null)
-										{
+									</div>
+								}
+								@if (Model.TicketPriorityId == 2)
+								{
+									<div class="card bg-success text-white shadow">
+										<div class="card-body">
 											<dd class="col-sm-10">
-												@Html.DisplayFor(model => model.DeveloperUser.FullName)
+												@Html.DisplayFor(model => model.TicketPriority.Name)
 											</dd>
-										}
-										else
-										{
+										</div>
+									</div>
+								}
+								@if (Model.TicketPriorityId == 3)
+								{
+									<div class="card bg-warning text-white shadow">
+										<div class="card-body">
 											<dd class="col-sm-10">
-												Unassigned
+												@Html.DisplayFor(model => model.TicketPriority.Name)
 											</dd>
-										}
-									</dl>
-								</div>
-							</div>
+										</div>
+									</div>
+								}
+								@if (Model.TicketPriorityId == 4)
+								{
+									<div class="card bg-danger text-white shadow">
+										<div class="card-body">
+											<dd class="col-sm-10">
+												@Html.DisplayFor(model => model.TicketPriority.Name)
+											</dd>
+										</div>
+									</div>
+								}
+							</dl>
+						</div>
+						<div class="col">
+							<dl>
+
+								<dt class="">
+									Project Name
+								</dt>
+								<dd class="col-sm-10">
+									@Html.DisplayFor(model => model.Project.Name)
+								</dd>
+								<dt class="">
+									Category
+								</dt>
+								<dd class="col-sm-10">
+									@Html.DisplayFor(model => model.TicketType.Name)
+								</dd>
+
+								<dt class="">
+									Status
+								</dt>
+								<dd class="col-sm-10">
+									@Html.DisplayFor(model => model.TicketStatus.Name)
+								</dd>
+								<dt class="">
+									Ticket Creator
+								</dt>
+								<dd class="col-sm-10">
+									@Html.DisplayFor(model => model.OwnerUser.FullName)
+								</dd>
+								<dt class="">
+									Assigned Developer
+								</dt>
+								@if (Model.DeveloperUserId != null)
+								{
+									<dd class="col-sm-10">
+										@Html.DisplayFor(model => model.DeveloperUser.FullName)
+									</dd>
+								}
+								else
+								{
+									<dd class="col-sm-10">
+										Unassigned
+									</dd>
+								}
+							</dl>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col">
-					<div class="card shadow mb-4">
-						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Ticket Histories</h6>
-						</div>
-						<div class="card-body">
-							<table class="table myTableHistory" id="myTable1">
-								<thead>
+			<!-- End Details-->
+		</div>
+		<!-- End Details-->
+		<!-- Comments-->
+		<div class="col">
+			<div class="card shadow mb-4 h-100">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Comments</h6>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<table class="table myTable" id="myTable1">
+							<thead>
+								<tr>
+									<th>
+										Comment
+									</th>
+									<th>
+										Author
+									</th>
+									<th>
+										Created
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model.Comments)
+								{
 									<tr>
-										<th>
-											Changed Field
-										</th>
-										<th>
-											Original
-										</th>
-										<th>
-											Updated
-										</th>
-										<th>
-											Change Date
-										</th>
-
-										<th>
-											Changed By
-										</th>
-
+										<td>
+											@Html.DisplayFor(modelItem => item.Comment)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.User.FullName)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.Created)
+										</td>
 									</tr>
-								</thead>
-								<tbody>
-									@foreach (var item in Model.Histories)
-									{
-										<tr>
-											<td>
-												@Html.DisplayFor(modelItem => item.Property)
-											</td>
-											<td>
-
-												@Html.DisplayFor(modelItem => item.OldValue)
-											</td>
-											<td>
-												@Html.DisplayFor(modelItem => item.NewValue)
-											</td>
-											<td>
-												@Html.DisplayFor(modelItem => item.Created)
-											</td>
-
-											<td>
-												@Html.DisplayFor(modelItem => item.User.Id)
-											</td>
-
-										</tr>
-									}
-								</tbody>
-							</table>
+								}
+							</tbody>
+						</table>
+					</div>
+					<div class="row">
+						<div class="col">
+							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
+|| await rolesService.IsUserInRole(user, "Admin")
+|| (await rolesService.IsUserInRole(user, "ProjectManager")
+&& await projectService.IsUserOnProject(userId, Model.ProjectId))
+|| userId == Model.OwnerUserId)
+							{
+								<form asp-controller="TicketComments" asp-action="Create">
+									<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+									@Html.Hidden("TicketId", Model.Id)
+									<div class="form-group">
+										<textarea name="Comment" class="form-control"> </textarea>
+									</div>
+									<div class="form-group">
+										<input type="submit" value="Submit Comment" class="btn btn-primary" />
+									</div>
+								</form>
+							}
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<!-- End Comments-->
+	</div>
+	<!--Attachments-->
+	<div class="row">
 		<div class="col">
-			<div class="row">
 				<div class="card shadow mb-4">
 					<div class="card-header py-3">
-						<h6 class="m-0 font-weight-bold text-primary">Comments</h6>
+						<h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
 					</div>
 					<div class="card-body">
-						<div class="row">
-							<table class="table myTable" id="myTable1">
-								<thead>
-									<tr>
-										<th>
-											Comment
-										</th>
-										<th>
-											Author
-										</th>
-										<th>
-											Created
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach (var item in Model.Comments)
-									{
-										<tr>
-											<td>
-												@Html.DisplayFor(modelItem => item.Comment)
-											</td>
-											<td>
-												@Html.DisplayFor(modelItem => item.User.FullName)
-											</td>
-											<td>
-												@Html.DisplayFor(modelItem => item.Created)
-											</td>
-										</tr>
-									}
-								</tbody>
-							</table>
-						</div>
-						<div class="row">
-							<div class="col">
-								@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-						|| await rolesService.IsUserInRole(user, "Admin")
-						|| (await rolesService.IsUserInRole(user, "ProjectManager")
-						&& await projectService.IsUserOnProject(userId, Model.ProjectId))
-						|| userId == Model.OwnerUserId)
-								{
-									<form asp-controller="TicketComments" asp-action="Create">
-										<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-										@Html.Hidden("TicketId", Model.Id)
-										<div class="form-group">
-											<textarea name="Comment" class="form-control"> </textarea>
-										</div>
-										<div class="form-group">
-											<input type="submit" value="Submit Comment" class="btn btn-primary" />
-										</div>
-									</form>
-								}
-							</div>
-						</div>
+						Hello World this is where attachments go
+						<hr />
+						<a asp-controller="Tickets" asp-action="CreateAttachment" asp-route-id="TicketId">Add Attachment</a>
+						Link For View Attachments Modal?
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col">
-					<div class="card shadow mb-4">
-						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
-						</div>
-						<div class="card-body">
-							Hello World this is where attachments go
-							<hr />
-							<a asp-controller="Tickets" asp-action="CreateAttachment" asp-route-id="TicketId">Add Attachment</a>
-							Link For View Attachments Modal?
-						</div>
-					</div>
+			<!-- End Attachments-->
+	</div>
+	<!-- Histories -->
+	<div class="row">
+		<div class="col">
+			<div class="card shadow mb-4">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Ticket Histories</h6>
+				</div>
+				<div class="card-body">
+					<table class="table myTableHistory" id="myTable1">
+						<thead>
+							<tr>
+								<th>
+									Changed Field
+								</th>
+								<th>
+									Original
+								</th>
+								<th>
+									Updated
+								</th>
+								<th>
+									Change Date
+								</th>
+
+								<th>
+									Changed By
+								</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var item in Model.Histories)
+							{
+								<tr>
+									<td>
+										@Html.DisplayFor(modelItem => item.Property)
+									</td>
+									<td>
+
+										@Html.DisplayFor(modelItem => item.OldValue)
+									</td>
+									<td>
+										@Html.DisplayFor(modelItem => item.NewValue)
+									</td>
+									<td>
+										@Html.DisplayFor(modelItem => item.Created)
+									</td>
+
+									<td>
+										@Html.DisplayFor(modelItem => item.User.Id)
+									</td>
+
+								</tr>
+							}
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
 	</div>
+	<!-- End Histories-->
 </div>
 

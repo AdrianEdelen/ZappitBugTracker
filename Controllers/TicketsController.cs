@@ -184,7 +184,7 @@ namespace ZappitBugTracker.Controllers
         #endregion
         #region GET/POST Edit
         // GET: Tickets/Edit/5
-        [Authorize(Roles = "Admin,ProjectManager,Developer")]
+        [Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -193,9 +193,11 @@ namespace ZappitBugTracker.Controllers
             }
 
             var ticket = await _context.Tickets
+                .Include(t => t.DeveloperUser)
                 .Include(t => t.TicketStatus)
                 .Include(t => t.TicketPriority)
                 .Include(t => t.OwnerUser)
+                .Include(t => t.TicketType)
                 .FirstOrDefaultAsync(i => i.Id == id);
             if (ticket == null)
             {
@@ -216,7 +218,7 @@ namespace ZappitBugTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,ProjectManager,Developer")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,DeveloperUserId")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,DeveloperUserId,OwnerUserId,Created")] Ticket ticket)
         {
             if (!User.IsInRole("Demo"))
             {
@@ -224,17 +226,16 @@ namespace ZappitBugTracker.Controllers
                 {
                     return NotFound();
                 }
-                ticket.DeveloperUser = await _context.Users.FindAsync(ticket.DeveloperUserId);
                 Ticket oldTicket = await _context.Tickets
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(t => t.Id == ticket.Id);
-                //ticket.DeveloperUser = _context.Tickets.Include(t => t.DeveloperUser);
-
-
+                            .AsNoTracking()
+                            .Include(t => t.DeveloperUser)
+                            .FirstOrDefaultAsync(t => t.Id == ticket.Id);
                 if (ModelState.IsValid)
                 {
                     try
                     {
+                        ticket.DeveloperUser = await _context.Users.FindAsync(ticket.DeveloperUserId);
+                        ticket.Updated = DateTimeOffset.Now;
                         _context.Update(ticket);
                         await _context.SaveChangesAsync();
                     }
@@ -249,14 +250,10 @@ namespace ZappitBugTracker.Controllers
                             throw;
                         }
                     }
-
                     //Add History
                     string userId = _userManager.GetUserId(User);
                     await _historyService.AddHistory(oldTicket, ticket, userId);
-
-                    ticket.Updated = DateTime.Now;
-                    return RedirectToAction("ProjectTickets", "Tickets", new { id = ticket.ProjectId });
-                    //return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Details", "Tickets", new { id = ticket.Id });
                 }
                 ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
                 ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
