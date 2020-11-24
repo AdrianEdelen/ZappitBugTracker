@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ZappitBugTracker.Data;
@@ -21,15 +22,17 @@ namespace ZappitBugTracker.Controllers
         private readonly IBTHistoryService _historyService;
         private readonly IBTProjectService _projectService;
         private readonly IBTRolesService _rolesService;
+        private readonly IBTAttachmentService _attachmentService;
         #endregion
         #region Constructors
-        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTHistoryService historyService, IBTProjectService projectService, IBTRolesService rolesService)
+        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTHistoryService historyService, IBTProjectService projectService, IBTRolesService rolesService, IBTAttachmentService attachmentService)
         {
             _context = context;
             _userManager = userManager;
             _historyService = historyService;
             _projectService = projectService;
             _rolesService = rolesService;
+            _attachmentService = attachmentService;
         }
         #endregion
 
@@ -54,9 +57,32 @@ namespace ZappitBugTracker.Controllers
         //{
         //    return View();
         //}
-
-
         #endregion
+        #region CreateAttachments
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MakeAttachment([Bind("FormFile, Description, TicketId")] TicketAttachment ticketAttachment)
+        {
+            
+            if (ModelState.IsValid)
+            {
+               
+                ticketAttachment.ContentType = ticketAttachment.FormFile.ContentType;
+                ticketAttachment.FileData = await _attachmentService.ConvertFileToByteArrayAsync(ticketAttachment.FormFile);
+                ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
+                ticketAttachment.Created = DateTimeOffset.Now;
+                ticketAttachment.UserId = _userManager.GetUserId(User);
+
+                _context.Add(ticketAttachment);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Tickets", new { id = ticketAttachment.TicketId });
+
+            }
+            
+            return RedirectToAction("Details", "Tickets", new { id = ticketAttachment.TicketId });
+        }
+        #endregion
+        
         #region GET Project Tickets
         //GET Project Tickets
         [Authorize]
@@ -121,6 +147,8 @@ namespace ZappitBugTracker.Controllers
                 .Include(t => t.TicketStatus)
                 .Include(t => t.TicketType)
                 .Include(t => t.Comments)
+                .Include(t => t.Attachments)
+                .Include(t => t.Histories)
                 .ThenInclude(tc => tc.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (ticket == null)
@@ -213,7 +241,7 @@ namespace ZappitBugTracker.Controllers
             //ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
             return View(ticket);
         }
-
+        
         // POST: Tickets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -330,6 +358,12 @@ namespace ZappitBugTracker.Controllers
         private bool TicketExists(int id)
         {
             return _context.Tickets.Any(e => e.Id == id);
+        }
+
+        public async Task<FileResult> DownloadFile (int id)
+        {
+            TicketAttachment attachment = await _context.TicketAttachments.FindAsync(id);
+            return File(attachment.FileData, attachment.ContentType);
         }
     }
 }

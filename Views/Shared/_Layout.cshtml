@@ -420,16 +420,17 @@
 			$(document).ready(function () {
 				$('table.myTableComments').DataTable({
 					"order": [[2, "desc"]],
-					pageLength: 6,
-					//pageResize: true
+					pageLength: 4,
+					"bFilter": false
 				});
 			});
 		</script>
 		<script>
 			$(document).ready(function () {
 				$('table.myTableHistory').DataTable({
-					"order": [[4, "desc"]],
-					pageLength: 3
+					"order": [[3, "desc"]],
+					pageLength: 10,
+					"bFilter": false
 				});
 			});
 		</script>

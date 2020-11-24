@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ZappitBugTracker.Models.Extensions;
 
 namespace ZappitBugTracker.Models
 {
@@ -8,7 +11,14 @@ namespace ZappitBugTracker.Models
         public int Id { get; set; }
         public string FilePath { get; set; }
 
-        [Required]
+        [NotMapped]
+        [DataType(DataType.Upload)]
+        [AllowedExtensions(new string[] { ".doc", ".docx", ".xls", ".xlsx", ".pdf", ".jpg", ".png"})]
+        [MaxFileSize(2 * 1024 * 1024)]
+        public IFormFile FormFile { get; set; }
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+
         public byte[] FileData { get; set; }
         public string Description { get; set; }
         public DateTimeOffset Created { get; set; }

@@ -3,6 +3,7 @@
 @inject ZappitBugTracker.services.IBTRolesService rolesService
 @inject ZappitBugTracker.services.IBTProjectService projectService
 @inject ZappitBugTracker.services.IBTAccessService accessService
+@inject ZappitBugTracker.services.IBTAttachmentService attachmentService
 
 @{
 	var user = await userManager.GetUserAsync(User);
@@ -11,7 +12,7 @@
 	ViewData["Title"] = "Details";
 }
 
-<h5>Title</h5>
+
 <h1>@Model.Title</h1>
 <hr />
 <div>
@@ -32,6 +33,7 @@
 				</div>
 			</div>
 			<div class="row">
+				<!-- End Description -->
 				<!-- Details -->
 				<div class="col">
 					<div class="card shadow mb-4 h-100">
@@ -41,10 +43,10 @@
 								<h6 class="m-0 font-weight-bold text-dark">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-						 || await rolesService.IsUserInRole(user, "Admin")
-						 || (await rolesService.IsUserInRole(user, "ProjectManager")
-						 && await projectService.IsUserOnProject(userId, Model.ProjectId))
-						 || userId == Model.OwnerUserId)
+					 || await rolesService.IsUserInRole(user, "Admin")
+					 || (await rolesService.IsUserInRole(user, "ProjectManager")
+					 && await projectService.IsUserOnProject(userId, Model.ProjectId))
+					 || userId == Model.OwnerUserId)
 									{<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>}
 								</h6>
 							</div>
@@ -55,10 +57,10 @@
 								<h6 class="m-0 font-weight-bold text-dark">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-						 || await rolesService.IsUserInRole(user, "Admin")
-						 || (await rolesService.IsUserInRole(user, "ProjectManager")
-						 && await projectService.IsUserOnProject(userId, Model.ProjectId))
-						 || userId == Model.OwnerUserId)
+					 || await rolesService.IsUserInRole(user, "Admin")
+					 || (await rolesService.IsUserInRole(user, "ProjectManager")
+					 && await projectService.IsUserOnProject(userId, Model.ProjectId))
+					 || userId == Model.OwnerUserId)
 									{
 										<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
 									}
@@ -71,10 +73,10 @@
 								<h6 class="m-0 font-weight-bold text-dark">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-						 || await rolesService.IsUserInRole(user, "Admin")
-						 || (await rolesService.IsUserInRole(user, "ProjectManager")
-						 && await projectService.IsUserOnProject(userId, Model.ProjectId))
-						 || userId == Model.OwnerUserId)
+					 || await rolesService.IsUserInRole(user, "Admin")
+					 || (await rolesService.IsUserInRole(user, "ProjectManager")
+					 && await projectService.IsUserOnProject(userId, Model.ProjectId))
+					 || userId == Model.OwnerUserId)
 									{
 										<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
 									}
@@ -87,10 +89,10 @@
 								<h6 class="m-0 font-weight-bold text-dark">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-						 || await rolesService.IsUserInRole(user, "Admin")
-						 || (await rolesService.IsUserInRole(user, "ProjectManager")
-						 && await projectService.IsUserOnProject(userId, Model.ProjectId))
-						 || userId == Model.OwnerUserId)
+					 || await rolesService.IsUserInRole(user, "Admin")
+					 || (await rolesService.IsUserInRole(user, "ProjectManager")
+					 && await projectService.IsUserOnProject(userId, Model.ProjectId))
+					 || userId == Model.OwnerUserId)
 									{
 										<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
 									}
@@ -183,13 +185,12 @@
 							</div>
 						</div>
 					</div>
-					
+
 				</div>
 				<!-- End Details-->
 			</div>
 		</div>
-		<!-- End Description -->
-		
+		<!-- End Description and Details -->
 		<!-- Comments-->
 		<div class="col">
 			<div class="card shadow mb-4 h-100">
@@ -233,10 +234,10 @@
 					<div class="row">
 						<div class="col">
 							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-								|| await rolesService.IsUserInRole(user, "Admin")
-								|| (await rolesService.IsUserInRole(user, "ProjectManager")
-								&& await projectService.IsUserOnProject(userId, Model.ProjectId))
-								|| userId == Model.OwnerUserId)
+							|| await rolesService.IsUserInRole(user, "Admin")
+							|| (await rolesService.IsUserInRole(user, "ProjectManager")
+							&& await projectService.IsUserOnProject(userId, Model.ProjectId))
+							|| userId == Model.OwnerUserId)
 							{
 								<form asp-controller="TicketComments" asp-action="Create">
 									<div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -244,8 +245,8 @@
 									<div class="form-group">
 										<textarea name="Comment" class="form-control"> </textarea>
 									</div>
-									<div class="form-group">
-										<input type="submit" value="Submit Comment" class="btn btn-primary" />
+									<div class="form-group d-flex align-items-end flex-column">
+										<input type="submit" value="Submit Comment" class="btn btn-primary mt-auto" style=""/>
 									</div>
 								</form>
 							}
@@ -259,20 +260,64 @@
 	<!--Attachments-->
 	<div class="row">
 		<div class="col">
-				<div class="card shadow mb-4">
-					<div class="card-header py-3">
-						<h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
-					</div>
-					<div class="card-body">
-						Hello World this is where attachments go
-						<hr />
-						<a asp-controller="Tickets" asp-action="CreateAttachment" asp-route-id="TicketId">Add Attachment</a>
-						Link For View Attachments Modal?
+			<div class="card shadow mb-4">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-2">
+							<div>
+								<form asp-action="MakeAttachment" asp-controller="Tickets" enctype="multipart/form-data" method="post">
+									<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+									<input type="hidden" asp-for="@Model.Id" name="TicketId">
+
+									<div class="media-body ml-3">
+										
+										<label>
+											FileName
+											<input asp-for="@Model.Attachments.FirstOrDefault().Description" type="text" class="form-control" />
+										</label><br />
+										<label class="btn btn-outline-primary btn-sm">
+											<input asp-for="@Model.Attachments.FirstOrDefault().FormFile" type="file" />
+										</label>
+										<button type="submit" class="btn btn-outline-secondary btn-sm md-btn-flat">Submit</button>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="col">
+							@foreach (TicketAttachment item in Model.Attachments)
+							{
+								@if (item != null)
+								{
+
+									<div class="col-sm-2">
+										
+										<div class="file">
+											<a asp-controller="Tickets" asp-action="DownloadFile" asp-route-id="@item.Id">
+												<div class="icon">
+													<img src="@attachmentService.GetFileIcon(item.FileName)" style="height:60px;width:60px" />
+												</div>
+												<div class="file-name">
+													<p class="m-b-5 text-muted">@*@System.IO.Path.GetFileNameWithoutExtension(item.FileName)*@ @item.Description</p>
+													<small>Size: @attachmentService.FormatFileSize(item.FileData.Length) <span class="date text-muted">@item.Created.ToString("MMM dd, yyyy")</span></small>
+												</div>
+											</a>
+											<a asp-controller="Tickets" asp-action="DownloadFile" asp-route-id="@item.Id" download><div class="btn btn-outline-primary">Download</div></a>
+										</div>
+										
+									</div>
+								}
+							}
+						</div>
 					</div>
 				</div>
 			</div>
-			<!-- End Attachments-->
+		</div>
 	</div>
+	<!-- need to make pdfs and images download directly instead of open in browser-->
+	<!-- End Attachments-->
 	<!-- Histories -->
 	<div class="row">
 		<div class="col">
