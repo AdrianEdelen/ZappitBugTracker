@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,8 +23,42 @@ namespace ZappitBugTracker.Data
     }
     public static class ContextSeed
     {
-        //seed roles
-        public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+        //seed additional users
+        //vary users on each project
+        //4 projects
+        //all users on each project
+        // 10 tickets per project
+        // 5 comments per ticket
+        // histories?
+        //randomize titles and descriptions
+        //randomize as much as possible
+
+        //ultimate goal, 100+ tickets
+        //20+ projects
+        //10+ users
+        //etc
+
+        //step 7 
+        //randomly assign users
+        //need to have an equal amount of each role 
+
+        //step 8
+        // seed tickets
+        //grab issues from github
+        //scrape them from github??
+        //randomly assign project, priority, type, and status.
+
+        /*
+         * 
+         * 
+         * 
+         */
+        public static List<BTUser> adminList = new List<BTUser>();
+        public static List<BTUser> pMList = new List<BTUser>();
+        public static List<BTUser> devList = new List<BTUser>();
+        public static List<BTUser> submitterList = new List<BTUser>();
+        public static List<Project> projectList = new List<Project>();
+        private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
         {
             await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Roles.ProjectManager.ToString()));
@@ -28,12 +66,120 @@ namespace ZappitBugTracker.Data
             await roleManager.CreateAsync(new IdentityRole(Roles.Submitter.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Roles.NewUser.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Roles.Demo.ToString()));
-
         }
-        //seed Users
-        public static async Task SeedDefaultUsersAsync(UserManager<BTUser> userManager)
+        private static async Task SeedDefaultUsersAsync(UserManager<BTUser> userManager)
         {
             var errorMsg = "******* ERROR SEEDING DEFAULT USER(S) *******";
+            var demoPassword = "Xyz%987$";
+            Random random = new Random();
+            var firstNamesList = new List<string>(){
+                "Liam",
+                "Noah",
+                "Oliver",
+                "William",
+                "Elijah",
+                "James",
+                "Benjamin",
+                "Lucas",
+                "Mason",
+                "Ethan",
+                "Alexander",
+                "Henry",
+                "Jacob",
+                "Michael",
+                "Daniel",
+                "Logan",
+                "Jackson",
+                "Sebastian",
+                "Jack",
+                "Aiden",
+                "Owen",
+                "Samuel",
+                "Matthew",
+                "Joseph",
+                "Levi",
+                "Mateo",
+                "David",
+                "John",
+                "Wyatt",
+                "Carter",
+                "Julian",
+                "Luke",
+                "Grayson",
+                "Isaac",
+                "Jayden",
+                "Theodore",
+                "Sherlock",
+                "Anthony",
+                "Dylan",
+                "Leo",
+                "Lincoln",
+                "Jaxon",
+                "Asher",
+                "Christopher",
+                "Josiah",
+                "Andrew",
+                "Thomas",
+                "Gabriel",
+                "Ezra",
+                "Parker",
+                "Watson"
+            };
+            var lastNamesList = new List<string>()
+            {
+                "Smith",
+                "Johnson",
+                "Williams",
+                "Brown",
+                "Jones",
+                "Garcia",
+                "Miller",
+                "Davis",
+                "Rodriguez",
+                "Martinez",
+                "Hernandez",
+                "Lopez",
+                "Gonzalez",
+                "Wilson",
+                "Anderson",
+                "Thomas",
+                "Taylor",
+                "Moore",
+                "Jackson",
+                "Martin",
+                "Lee",
+                "Perez",
+                "Thompson",
+                "White",
+                "Harris",
+                "Sanchez",
+                "Clark",
+                "Ramirez",
+                "Lewis",
+                "Robinson",
+                "Walker",
+                "Young",
+                "Allen",
+                "King",
+                "Wright",
+                "Scott",
+                "Torres",
+                "Nguyen",
+                "Hill",
+                "Flores",
+                "Green",
+                "Adams",
+                "Nelson",
+                "Baker",
+                "Hall",
+                "Rivera",
+                "Campbell",
+                "Mitchell",
+                "Carter",
+                "Roberts",
+                "Allende"
+            };
+            var mail = "@mailinator.com";
             #region defaultAdmin
             var defaultAdmin = new BTUser
             {
@@ -51,6 +197,7 @@ namespace ZappitBugTracker.Data
                     await userManager.CreateAsync(defaultAdmin, "Abc&123!");
                     await userManager.AddToRoleAsync(defaultAdmin, Roles.Admin.ToString());
                 }
+
             }
             catch (Exception ex)
             {
@@ -159,7 +306,6 @@ namespace ZappitBugTracker.Data
                 throw;
             }
             #endregion
-            var demoPassword = "Xyz%987$";
             #region demo defaultadmin
             defaultAdmin = new BTUser
             {
@@ -290,220 +436,716 @@ namespace ZappitBugTracker.Data
                 throw;
             }
             #endregion
+            #region gen Admins
+            //loop 10 times to create 10 uniqueish admins
+            for (var i = 0; i < 10; i++)
+            {
+                defaultAdmin = new BTUser
+                {
+                    UserName = firstNamesList[i] + lastNamesList[i] + mail,
+                    Email = firstNamesList[i] + lastNamesList[i] + mail,
+                    FirstName = firstNamesList[i],
+                    LastName = lastNamesList[i],
+                    EmailConfirmed = true
+                };
+                try
+                {
+                    var user = await userManager.FindByEmailAsync(defaultAdmin.Email);
+                    if (user == null)
+                    {
+                        await userManager.CreateAsync(defaultAdmin, demoPassword);
+                        await userManager.AddToRoleAsync(defaultAdmin, Roles.Admin.ToString());
+                    }
+                    adminList.Add(defaultAdmin);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(errorMsg);
+                    Debug.WriteLine(ex);
+                    throw;
+                }
+            }
+            #endregion
+            #region gen PMs
+            // loop over to create Project Managers
+            for (var i = 0; i < 10; i++)
+            {
+                defaultAdmin = new BTUser
+                {
+                    UserName = firstNamesList[i + 10] + lastNamesList[i + 10] + mail,
+                    Email = firstNamesList[i + 10] + lastNamesList[i + 10] + mail,
+                    FirstName = firstNamesList[i + 10],
+                    LastName = lastNamesList[i + 10],
+                    EmailConfirmed = true
+                };
+                try
+                {
+                    var user = await userManager.FindByEmailAsync(defaultAdmin.Email);
+                    if (user == null)
+                    {
+                        await userManager.CreateAsync(defaultAdmin, demoPassword);
+                        await userManager.AddToRoleAsync(defaultAdmin, Roles.ProjectManager.ToString());
+                    }
+                    pMList.Add(defaultAdmin);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(errorMsg);
+                    Debug.WriteLine(ex);
+                    throw;
+                }
+            }
+            #endregion
+            #region gen Devs
+            // loop over to create Developers
+            for (var i = 0; i < 10; i++)
+            {
+                defaultAdmin = new BTUser
+                {
+                    UserName = firstNamesList[i + 20] + lastNamesList[i + 20] + mail,
+                    Email = firstNamesList[i + 20] + lastNamesList[i + 20] + mail,
+                    FirstName = firstNamesList[i + 20],
+                    LastName = lastNamesList[i + 20],
+                    EmailConfirmed = true
+                };
+                try
+                {
+                    var user = await userManager.FindByEmailAsync(defaultAdmin.Email);
+                    if (user == null)
+                    {
+                        await userManager.CreateAsync(defaultAdmin, demoPassword);
+                        await userManager.AddToRoleAsync(defaultAdmin, Roles.Developer.ToString());
+                    }
+                    devList.Add(defaultAdmin);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(errorMsg);
+                    Debug.WriteLine(ex);
+                    throw;
+                }
+            }
+            #endregion
+            #region gen Submitters
+            //loop to create submitters
+            for (var i = 0; i < 10; i++)
+            {
+                defaultAdmin = new BTUser
+                {
+                    UserName = firstNamesList[i + 30] + lastNamesList[i + 30] + mail,
+                    Email = firstNamesList[i + 30] + lastNamesList[i + 30] + mail,
+                    FirstName = firstNamesList[i + 30],
+                    LastName = lastNamesList[i + 30],
+                    EmailConfirmed = true
+                };
+                try
+                {
+                    var user = await userManager.FindByEmailAsync(defaultAdmin.Email);
+                    if (user == null)
+                    {
+                        await userManager.CreateAsync(defaultAdmin, demoPassword);
+                        await userManager.AddToRoleAsync(defaultAdmin, Roles.Submitter.ToString());
+                    }
+                    submitterList.Add(defaultAdmin);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(errorMsg);
+                    Debug.WriteLine(ex);
+                    throw;
+                }
+            }
+            #endregion
         }
-        //public static async Task SeedDefaultprojectsTicketsComments(ApplicationDbContext context)
-        //{
-        //    //set this bool to false if you do not want to seed fake projects, Tickets, and comments.
-        //    bool seedFakeContent = true;
-        //    if (seedFakeContent)
-        //    {
-        //        var project1 = new Project
-        //        {
-        //            Name = "It Department",
-        //            Tickets = [new Ticket { ProjectId = 1, }]
-        //        };
-        //        var project2 = new Project
-        //        {
-        //            Name = "Marketing Department"
-        //        };
-        //        var project3 = new Project
-        //        {
-        //            Name = "Finance Department"
-        //        };
-        //        var project4 = new Project
-        //        {
-        //            Name = "Maintenance Department"
-        //        };
-        //        var project5 = new Project
-        //        {
-        //            Name = "Facilities Department"
-        //        };
-        //        var ticket1 = new Ticket
-        //        {
+        private static async Task SeedDefaultTicketPriorityAsync(ApplicationDbContext context)
+        {
+            var priList = new List<TicketPriority>() {
+                new TicketPriority
+                {
+                    Name = "New"
+                },
+                new TicketPriority
+                {
+                    Name = "Low"
+                },
+                new TicketPriority
+                {
+                    Name = "High"
+                },
+                new TicketPriority
+                {
+                    Name = "Urgent"
+                }
+            };
+            foreach (var pri in priList)
+            {
+                try
+                {
+                    var ticketPriority = await context.TicketPriority.Where(t => t.Name == pri.Name).FirstOrDefaultAsync();
+                    if (ticketPriority == null)
+                    {
+                        await context.TicketPriority.AddAsync(pri);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"**** Error Adding Default Ticket Priority {pri.Name} ****");
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+        }
+        private static async Task SeedDefaultTicketTypeAsync(ApplicationDbContext context)
+        {
+            var typeList = new List<TicketType>() {
+                new TicketType
+                {
+                    Name = "UI"
+                },
+                new TicketType
+                {
+                    Name = "Database"
+                },
+                new TicketType
+                {
+                    Name = "User Experience"
+                },
+                new TicketType
+                {
+                    Name = "Back End"
+                },
+                new TicketType
+                {
+                    Name = "Feature Request"
+                }
+            };
+            foreach (var type in typeList)
+            {
+                try
+                {
+                    var ticketType = await context.TicketTypes.Where(t => t.Name == type.Name).FirstOrDefaultAsync();
+                    if (ticketType == null)
+                    {
+                        await context.TicketTypes.AddAsync(type);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"**** Error Adding Default Ticket type {type.Name} ****");
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+        }
+        private static async Task SeedDefaultStatusAsync(ApplicationDbContext context)
+        {
+            var statusList = new List<TicketStatus>() {
+                new TicketStatus
+                {
+                    Name = "New"
+                },
+                new TicketStatus
+                {
+                    Name = "Open"
+                },
+                new TicketStatus
+                {
+                    Name = "Closed"
+                }
+            };
+            foreach (var status in statusList)
+            {
+                try
+                {
+                    var ticketStatus = await context.TicketStatus.Where(t => t.Name == status.Name).FirstOrDefaultAsync();
+                    if (ticketStatus == null)
+                    {
+                        await context.TicketStatus.AddAsync(status);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"**** Error Adding Default Ticket Status {status.Name} ****");
+                    Debug.WriteLine(ex.Message);
+                }
+            }    
+        }
+        private static async Task SeedDefaultProjectsAsync(ApplicationDbContext context)
+        {
+            var projectNames = new List<Project>()
+            {
+                new Project {
+                    Name = "Financial Management Software"
+                },
+                new Project
+                {
+                    Name = "Issue Tracker Software"
+                },
+                new Project
+                {
+                    Name = "Blog"
+                },
+                new Project
+                {
+                    Name = "Financial Portal API"
+                }
+            };
+            foreach (var project in projectNames)
+            {
+                try
+                {
+                    var projectToSave = await context.Projects.Where(p => p.Name == project.Name).FirstOrDefaultAsync();
+                    if (projectToSave == null)
+                    {
+                        await context.Projects.AddAsync(project);
+                        await context.SaveChangesAsync();
+                    }
+                    projectList.Add(projectToSave);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"**** Error Adding Default Project {project.Name} ****");
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+        }
+        private static async Task SeedProjectUsersAsync(ApplicationDbContext context, UserManager<BTUser> userManager)
+        {
+            var adminIdList = new List<string>();
+            var pMIdList = new List<string>();
+            var devIdList = new List<string>();
+            var submitterIdList = new List<string>();
+            var projectIdList = new List<int>();
+            foreach (var admin in adminList)
+            {
+                
+                adminIdList.Add((await userManager.FindByEmailAsync(admin.Email)).Id);
+            }
+            foreach (var pm in pMList)
+            {
+                var email = pm.Email;
+                var id = (await userManager.FindByEmailAsync(email)).Id;
+                pMIdList.Add(id);
+            }
+            foreach (var dev in devList)
+            {
+                var email = dev.Email;
+                var id = (await userManager.FindByEmailAsync(email)).Id;
+                devIdList.Add(id);
+            }
+            foreach (var submitter in submitterList)
+            {
+                var email = submitter.Email;
+                var id = (await userManager.FindByEmailAsync(email)).Id;
+                submitterIdList.Add(id);
+            }
+            foreach (var project in projectList)
+            {
+                var projectId = (await context.Projects.FirstOrDefaultAsync(p => p.Name == project.Name)).Id;
+                projectIdList.Add(projectId);
+            }
+            //string adminId = (await userManager.FindByEmailAsync("demoadmin@mailinator.com")).Id;
+            //string pMId = (await userManager.FindByEmailAsync("demopm@mailinator.com")).Id;
+            //string developerId = (await userManager.FindByEmailAsync("demodev@mailinator.com")).Id;
+            //string submiiterId = (await userManager.FindByEmailAsync("demosubmitter@mailinator.com")).Id;
+            //int project1Id = (await context.Projects.FirstOrDefaultAsync(p => p.Name == "Financial Management Software")).Id;
+            //int project2Id = (await context.Projects.FirstOrDefaultAsync(p => p.Name == "Issue Tracker Software")).Id;
+            //int project3Id = (await context.Projects.FirstOrDefaultAsync(p => p.Name == "Blog")).Id;
+            //int project4Id = (await context.Projects.FirstOrDefaultAsync(p => p.Name == "Financial Portal API")).Id;
 
-        //        }
-        //        var ticket2 = n
-        //    }
-        //}
-        public static async Task SeedDefaultTicketPriority(ApplicationDbContext context)
-        {
-            var defaultSeedNew = new TicketPriority
+            #region add admin
+            ProjectUser projectUser = new ProjectUser
             {
-                Name = "New"
+                UserId = adminId,
+                ProjectId = project1Id
             };
-            var defaultSeedLow = new TicketPriority
-            {
-                Name = "Low"
-            };
-            var defaultSeedHigh = new TicketPriority
-            {
-                Name = "High"
-            };
-            var defaultSeedUrgent = new TicketPriority
-            {
-                Name = "Urgent"
-            };
-            //new
-            try
-            {
-                var ticketPriority = await context.TicketPriority.Where(t => t.Name == "New").FirstOrDefaultAsync();
-                if (ticketPriority == null)
-                {
-                    await context.TicketPriority.AddAsync(defaultSeedNew);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Default Ticket Priority New ****");
-                Debug.WriteLine(ex.Message);
-            }
-            //low
-            try
-            {
-                var ticketPriority = await context.TicketPriority.Where(t => t.Name == "Low").FirstOrDefaultAsync();
-                if (ticketPriority == null)
-                {
-                    await context.TicketPriority.AddAsync(defaultSeedLow);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Default Ticket Priority Low ****");
-                Debug.WriteLine(ex.Message);
-            }
-            //high
-            try
-            {
-                var ticketPriority = await context.TicketPriority.Where(t => t.Name == "High").FirstOrDefaultAsync();
-                if (ticketPriority == null)
-                {
-                    await context.TicketPriority.AddAsync(defaultSeedHigh);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Default Ticket Priority High ****");
-                Debug.WriteLine(ex.Message);
-            }
-            //urgent
-            try
-            {
-                var ticketPriority = await context.TicketPriority.Where(t => t.Name == "Urgent").FirstOrDefaultAsync();
-                if (ticketPriority == null)
-                {
-                    await context.TicketPriority.AddAsync(defaultSeedUrgent);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Default Ticket Priority Urgent ****");
-                Debug.WriteLine(ex.Message);
-            }
 
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 1 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = adminId,
+                ProjectId = project2Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 2 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = adminId,
+                ProjectId = project3Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 3 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = adminId,
+                ProjectId = project4Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 4 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            #endregion
+
+            #region add pm
+            projectUser = new ProjectUser
+            {
+                UserId = pMId,
+                ProjectId = project1Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 1 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = pMId,
+                ProjectId = project2Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 2 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = pMId,
+                ProjectId = project3Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 3 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = pMId,
+                ProjectId = project4Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 4 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            #endregion
+
+            #region add dev
+            projectUser = new ProjectUser
+            {
+                UserId = developerId,
+                ProjectId = project1Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 1 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = developerId,
+                ProjectId = project2Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 2 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = developerId,
+                ProjectId = project3Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 3 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = developerId,
+                ProjectId = project4Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 4 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            #endregion
+
+            #region add submitter
+            projectUser = new ProjectUser
+            {
+                UserId = submiiterId,
+                ProjectId = project1Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 1 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = submiiterId,
+                ProjectId = project2Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 2 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = submiiterId,
+                ProjectId = project3Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 3 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            projectUser = new ProjectUser
+            {
+                UserId = submiiterId,
+                ProjectId = project4Id
+            };
+            try
+            {
+                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
+                if (record == null)
+                {
+                    await context.ProjectUsers.AddAsync(projectUser);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("**** Error Adding Admin to project 4 ****");
+                Debug.WriteLine(ex.Message);
+            }
+            #endregion
         }
-        public static async Task SeedDefaultTicketType(ApplicationDbContext context)
+        private static async Task SeedDefaultTicketsAsync(ApplicationDbContext context, UserManager<BTUser> userManager)
         {
-            var defaultSeedBug = new TicketType
+            string developerId = (await userManager.FindByEmailAsync("demodev@mailinator.com")).Id;
+            string submiiterId = (await userManager.FindByEmailAsync("demosubmitter@mailinator.com")).Id;
+            int project1Id = (await context.Projects.FirstOrDefaultAsync(predicate => predicate.Name == "Financial Management Software")).Id;
+            int project2Id = (await context.Projects.FirstOrDefaultAsync(predicate => predicate.Name == "Issue Tracker Software")).Id;
+            int project3Id = (await context.Projects.FirstOrDefaultAsync(predicate => predicate.Name == "Blog")).Id;
+            int project4Id = (await context.Projects.FirstOrDefaultAsync(predicate => predicate.Name == "Financial Portal API")).Id;
+            int statusId = (await context.TicketStatus.FirstOrDefaultAsync(ts => ts.Name == "open")).Id;
+            int typeId = (await context.TicketTypes.FirstOrDefaultAsync(ts => ts.Name == "Bug")).Id;
+            int priorityId = (await context.TicketPriority.FirstOrDefaultAsync(ts => ts.Name == "Low")).Id;
+
+            Ticket ticket = new Ticket
             {
-                Name = "Bug"
-            };
-            var defaultSeedFeature = new TicketType
-            {
-                Name = "Feature"
+                Title = "Ticket Title",
+                Description = "Description",
+                Created = DateTimeOffset.Now.AddDays(-7),
+                Updated = DateTimeOffset.Now.AddHours(-30),
+                ProjectId = project1Id,
+                TicketPriorityId = priorityId,
+                TicketStatusId = statusId,
+                TicketTypeId = typeId,
+                DeveloperUserId = developerId,
+                OwnerUserId = submiiterId
             };
             try
             {
-                var ticketType = await context.TicketTypes.Where(t => t.Name == "Bug").FirstOrDefaultAsync();
-                if (ticketType == null)
+                var newTicket = await context.Tickets.FirstOrDefaultAsync(t => t.Title == "Ticket Title");
+                if (newTicket == null)
                 {
-                    await context.TicketTypes.AddAsync(defaultSeedBug);
+                    await context.Tickets.AddAsync(newTicket);
                     await context.SaveChangesAsync();
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("**** Error Adding Default Ticket type Bug ****");
-                Debug.WriteLine(ex.Message);
-            }
-            try
-            {
-                var ticketType = await context.TicketTypes.Where(t => t.Name == "Feature").FirstOrDefaultAsync();
-                if (ticketType == null)
-                {
-                    await context.TicketTypes.AddAsync(defaultSeedFeature);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Default Ticket type Feature ****");
+                Debug.WriteLine("**** Error Adding ticket 1  ****");
                 Debug.WriteLine(ex.Message);
             }
         }
-        public static async Task SeedDefaultStatusType(ApplicationDbContext context)
+
+        public static async Task RunSeedMethodsAsync(RoleManager<IdentityRole> roleManager, UserManager<BTUser> userManager, ApplicationDbContext context)
         {
-            var defaultSeedUnassigned = new TicketStatus
+            await SeedRolesAsync(roleManager);
+            await SeedDefaultUsersAsync(userManager);
+            await SeedDefaultTicketPriorityAsync(context);
+            await SeedDefaultTicketTypeAsync(context);
+            await SeedDefaultStatusAsync(context);
+            await SeedDefaultProjectsAsync(context);
+            await SeedProjectUsersAsync(context, userManager);
+            await SeedDefaultTicketsAsync(context, userManager);
+        }
+
+        public static async Task CompleteSeedMethod(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
             {
-                Name = "Unassigned"
-            };
-            var defaultSeedOpen = new TicketStatus
-            {
-                Name = "Open"
-            };
-            var defaultSeedClosed = new TicketStatus
-            {
-                Name = "Closed"
-            };
-            try
-            {
-                var ticketStatus = await context.TicketStatus.Where(t => t.Name == "Unassigned").FirstOrDefaultAsync();
-                if (ticketStatus == null)
+                var services = scope.ServiceProvider;
+                var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+                try
                 {
-                    await context.TicketStatus.AddAsync(defaultSeedUnassigned);
-                    await context.SaveChangesAsync();
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    var userManager = services.GetRequiredService<UserManager<BTUser>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    await RunSeedMethodsAsync(roleManager, userManager, context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = loggerFactory.CreateLogger<Program>();
+                    logger.LogError(ex, "An error ocurred seeding the DB.");
                 }
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Default Ticket Status Unassigned ****");
-                Debug.WriteLine(ex.Message);
-            }
-            try
-            {
-                var ticketStatus = await context.TicketStatus.Where(t => t.Name == "Open").FirstOrDefaultAsync();
-                if (ticketStatus == null)
-                {
-                    await context.TicketStatus.AddAsync(defaultSeedOpen);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Default Ticket Status Open ****");
-                Debug.WriteLine(ex.Message);
-            }
-            try
-            {
-                var ticketStatus = await context.TicketStatus.Where(t => t.Name == "Closed").FirstOrDefaultAsync();
-                if (ticketStatus == null)
-                {
-                    await context.TicketStatus.AddAsync(defaultSeedClosed);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Default Ticket Status Closed ****");
-                Debug.WriteLine(ex.Message);
-            }
+            host.Run();
         }
     }
-
-
 }
 
 

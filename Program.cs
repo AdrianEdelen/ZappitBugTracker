@@ -27,11 +27,7 @@ namespace ZappitBugTracker
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     var userManager = services.GetRequiredService<UserManager<BTUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    await ContextSeed.SeedRolesAsync(roleManager);
-                    await ContextSeed.SeedDefaultUsersAsync(userManager);
-                    await ContextSeed.SeedDefaultTicketType(context);
-                    await ContextSeed.SeedDefaultTicketPriority(context);
-                    await ContextSeed.SeedDefaultStatusType(context);
+                    await ContextSeed.RunSeedMethodsAsync(roleManager, userManager, context);
                 }
                 catch (Exception ex)
                 {

@@ -19,6 +19,7 @@
 
 <!-- Content Row -->
 <div class="row">
+	
 
 	<!-- Earnings (Monthly) Card Example -->
 	<div class="col-xl-3 col-md-6 mb-4">
@@ -349,6 +350,7 @@
 	</div>
 </div>
 
+<div id="myfirstchart" style="height: 250px;"></div>
 
 
 <!-- Page level plugins -->
@@ -357,3 +359,28 @@
 <!-- Page level custom scripts -->
 <script src="js/demo/chart-area-demo.js"></script>
 <script src="js/demo/chart-pie-demo.js"></script>
+@section Scripts{
+<script>
+	//step 1 - construct the url that we need to go to request the data
+	var url = '@Url.Action("GetDemoChartData","charts")'
+	//step 2 - start the structure for our AJAX call
+	$.post(url).then(function (response) {
+		new Morris.Bar({
+			// ID of the element in which to draw the chart.
+			element: 'myfirstchart',
+			// Chart data records -- each entry in this array corresponds to a point on
+			// the chart.
+			data: response,
+			// The name of the data record attribute that contains x-values.
+			xkey: 'priority',
+			// A list of names of data record attributes that contain y-values.
+			ykeys: ['count'],
+			// Labels for the ykeys -- will be displayed when you hover over the
+			// chart.
+			labels: ['Value']
+		});
+	});
+
+	
+</script>
+	}

@@ -4,15 +4,12 @@
 @inject ZappitBugTracker.services.IBTProjectService projectService
 @inject ZappitBugTracker.services.IBTAccessService accessService
 @inject ZappitBugTracker.services.IBTAttachmentService attachmentService
-
 @{
 	var user = await userManager.GetUserAsync(User);
 	var userId = await userManager.GetUserIdAsync(user);
 	var ticketId = Model.Id;
 	ViewData["Title"] = "Details";
 }
-
-
 <h1>@Model.Title</h1>
 <hr />
 <div>
@@ -300,7 +297,7 @@
 													<img src="@attachmentService.GetFileIcon(item.FileName)" style="height:60px;width:60px" />
 												</div>
 												<div class="file-name">
-													<p class="m-b-5 text-muted">@*@System.IO.Path.GetFileNameWithoutExtension(item.FileName)*@ @item.Description</p>
+													<p class="m-b-5 text-muted">@item.Description</p>
 													<small>Size: @attachmentService.FormatFileSize(item.FileData.Length) <span class="date text-muted">@item.Created.ToString("MMM dd, yyyy")</span></small>
 												</div>
 											</a>
@@ -316,7 +313,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- need to make pdfs and images download directly instead of open in browser-->
 	<!-- End Attachments-->
 	<!-- Histories -->
 	<div class="row">
@@ -380,4 +376,3 @@
 	</div>
 	<!-- End Histories-->
 </div>
-

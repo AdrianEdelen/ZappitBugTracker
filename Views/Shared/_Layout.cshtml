@@ -15,6 +15,8 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<title>Zappit Bug Tracker</title>
+	<!-- morris css-->
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 	<!-- Custom fonts for this template-->
 	<link href="~/fontawesome-free/css/all.min.css" rel="stylesheet" />
 	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -410,12 +412,18 @@
 		<script src="js/demo/chart-pie-demo.js"></script>
 		<!-- Page level plugins -->
 		<script src="vendor/chart.js/Chart.min.js"></script>
+		<!-- morris chart -->
 		@* Datatables *@
 		<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
 		<!-- DataTables Plugin -->
 		<script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/plug-ins/1.10.21/features/pageResize/dataTables.pageResize.min.js"></script>
 		@* Sweet Alert *@
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 		<script>
 			$(document).ready(function () {
 				$('table.myTableComments').DataTable({
