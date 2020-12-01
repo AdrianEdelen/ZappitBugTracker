@@ -159,28 +159,8 @@ namespace ZappitBugTracker.Controllers
             return View(ticket);
         }
         #endregion
-        #region GET/POST Create
-        // GET: Tickets/Create
-        [Authorize(Roles = "Admin,ProjectManager,Submitter,Developer")]
-        public async Task<IActionResult> Create()
-        {
-
-            Ticket currentTicket = new Ticket();
-            var currentUser = await _userManager.GetUserAsync(User);
-
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
-            if (await _rolesService.IsUserInRole(currentUser, "admin"))
-            {
-                ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
-            }
-            else
-            {
-                ViewData["ProjectId"] = new SelectList(await _projectService.ListUserProjectsAsync(currentUser.Id), "Id", "Name");
-            }
-            //ViewData["ProjectId"] = new SelectList(await _projectService.ListUserProjectsAsync(currentUser.Id), "Id", "Name");
-            return View(currentTicket);
-        }
-
+        #region POST Create
+        
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -197,7 +177,7 @@ namespace ZappitBugTracker.Controllers
                 ticket.OwnerUserId = _userManager.GetUserId(User);
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", "Tickets", new { id = ticket.Id });
                 //add a sweet alert on succesful ticket submission
             }
 
@@ -207,7 +187,8 @@ namespace ZappitBugTracker.Controllers
             ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Id", ticket.TicketPriorityId);
             ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Id", ticket.TicketStatusId);
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
-            return View(ticket);
+            return View();
+            
         }
         #endregion
         #region GET/POST Edit
@@ -238,7 +219,7 @@ namespace ZappitBugTracker.Controllers
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Name", ticket.TicketStatusId);
-            //ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
+            
             return View(ticket);
         }
         

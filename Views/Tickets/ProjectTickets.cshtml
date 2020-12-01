@@ -17,15 +17,13 @@
 <div>
 	<a asp-area="" asp-controller="Projects" asp-action="Index">Back to Projects</a>
 </div>
-<table class="table myTable" id="myTable">
+<table class="table" id="projectTicketsTable">
 	<thead>
 		<tr>
 			<th>
 				@Html.DisplayNameFor(model => model.Title)
 			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Description)
-			</th>
+			
 			<th>
 				@Html.DisplayNameFor(model => model.Created)
 			</th>
@@ -61,9 +59,7 @@
 						<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
 
 					</td>
-					<td>
-						<a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Description)</a>
-					</td>
+					
 					<td>
 						@Html.DisplayFor(modelItem => item.Created)
 					</td>

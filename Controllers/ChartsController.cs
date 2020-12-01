@@ -29,10 +29,6 @@ namespace ZappitBugTracker.Controllers
                     Count = _context.Tickets.Where(t => t.TicketPriorityId == priority.Id).Count()
                 });
             }
-
-
-
-
             return Json(result);
         }
     }

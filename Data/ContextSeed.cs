@@ -755,321 +755,333 @@ namespace ZappitBugTracker.Data
             //int project4Id = (await context.Projects.FirstOrDefaultAsync(p => p.Name == "Financial Portal API")).Id;
 
             #region add admin
-            ProjectUser projectUser = new ProjectUser
-            {
-                UserId = adminId,
-                ProjectId = project1Id
-            };
+            ProjectUser adminUser = new ProjectUser();
+            ProjectUser pmUser = new ProjectUser();
+            ProjectUser devUser = new ProjectUser();
+            ProjectUser submitterUser = new ProjectUser();
 
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 1 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = adminId,
-                ProjectId = project2Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 2 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = adminId,
-                ProjectId = project3Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 3 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = adminId,
-                ProjectId = project4Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 4 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            #endregion
 
-            #region add pm
-            projectUser = new ProjectUser
-            {
-                UserId = pMId,
-                ProjectId = project1Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 1 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = pMId,
-                ProjectId = project2Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 2 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = pMId,
-                ProjectId = project3Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 3 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = pMId,
-                ProjectId = project4Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 4 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            #endregion
+            //foreach (var projectId in projectIdList)
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
+            //}
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.)
 
-            #region add dev
-            projectUser = new ProjectUser
-            {
-                UserId = developerId,
-                ProjectId = project1Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 1 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = developerId,
-                ProjectId = project2Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 2 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = developerId,
-                ProjectId = project3Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 3 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = developerId,
-                ProjectId = project4Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 4 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            #endregion
+            //} catch (Exception ex)
+            //{
 
-            #region add submitter
-            projectUser = new ProjectUser
-            {
-                UserId = submiiterId,
-                ProjectId = project1Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 1 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = submiiterId,
-                ProjectId = project2Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 2 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = submiiterId,
-                ProjectId = project3Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 3 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            projectUser = new ProjectUser
-            {
-                UserId = submiiterId,
-                ProjectId = project4Id
-            };
-            try
-            {
-                var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
-                if (record == null)
-                {
-                    await context.ProjectUsers.AddAsync(projectUser);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("**** Error Adding Admin to project 4 ****");
-                Debug.WriteLine(ex.Message);
-            }
-            #endregion
+            //}
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 1 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = adminId,
+            //    ProjectId = project2Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 2 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = adminId,
+            //    ProjectId = project3Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 3 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = adminId,
+            //    ProjectId = project4Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 4 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //#endregion
+
+            //#region add pm
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = pMId,
+            //    ProjectId = project1Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 1 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = pMId,
+            //    ProjectId = project2Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 2 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = pMId,
+            //    ProjectId = project3Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 3 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = pMId,
+            //    ProjectId = project4Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 4 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //#endregion
+
+            //#region add dev
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = developerId,
+            //    ProjectId = project1Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 1 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = developerId,
+            //    ProjectId = project2Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 2 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = developerId,
+            //    ProjectId = project3Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 3 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = developerId,
+            //    ProjectId = project4Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 4 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //#endregion
+
+            //#region add submitter
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = submiiterId,
+            //    ProjectId = project1Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 1 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = submiiterId,
+            //    ProjectId = project2Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 2 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = submiiterId,
+            //    ProjectId = project3Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 3 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //projectUser = new ProjectUser
+            //{
+            //    UserId = submiiterId,
+            //    ProjectId = project4Id
+            //};
+            //try
+            //{
+            //    var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project4Id);
+            //    if (record == null)
+            //    {
+            //        await context.ProjectUsers.AddAsync(projectUser);
+            //        await context.SaveChangesAsync();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("**** Error Adding Admin to project 4 ****");
+            //    Debug.WriteLine(ex.Message);
+            //}
+            //#endregion
         }
         private static async Task SeedDefaultTicketsAsync(ApplicationDbContext context, UserManager<BTUser> userManager)
         {
@@ -1148,4 +1160,4 @@ namespace ZappitBugTracker.Data
     }
 }
 
-
+#endregion

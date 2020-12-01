@@ -9,23 +9,31 @@
 
   <ItemGroup>
     <Compile Remove="Views\Notifications\**" />
+    <Compile Remove="Views\TicketAttachments\**" />
+    <Compile Remove="Views\TicketComments\**" />
+    <Compile Remove="Views\TicketHistories\**" />
     <Content Remove="Views\Notifications\**" />
+    <Content Remove="Views\TicketAttachments\**" />
+    <Content Remove="Views\TicketComments\**" />
+    <Content Remove="Views\TicketHistories\**" />
     <EmbeddedResource Remove="Views\Notifications\**" />
+    <EmbeddedResource Remove="Views\TicketAttachments\**" />
+    <EmbeddedResource Remove="Views\TicketComments\**" />
+    <EmbeddedResource Remove="Views\TicketHistories\**" />
     <None Remove="Views\Notifications\**" />
+    <None Remove="Views\TicketAttachments\**" />
+    <None Remove="Views\TicketComments\**" />
+    <None Remove="Views\TicketHistories\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Controllers\NotificationsController.cs" />
+    <Compile Remove="Controllers\TicketHistoriesController.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="Views\Projects\Delete.cshtml" />
     <Content Remove="Views\Projects\Details.cshtml" />
-    <Content Remove="Views\TicketAttachments\Delete.cshtml" />
-    <Content Remove="Views\TicketAttachments\Details.cshtml" />
-    <Content Remove="Views\TicketAttachments\Edit.cshtml" />
-    <Content Remove="Views\TicketHistories\Delete.cshtml" />
-    <Content Remove="Views\TicketHistories\Details.cshtml" />
     <Content Remove="Views\TicketPriorities\Details.cshtml" />
     <Content Remove="Views\TicketPriorities\Edit.cshtml" />
     <Content Remove="Views\TicketStatus\Details.cshtml" />

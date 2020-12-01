@@ -4,6 +4,7 @@
 @inject ZappitBugTracker.services.IBTProjectService projectService
 @inject ZappitBugTracker.services.IBTAccessService accessService
 @inject ZappitBugTracker.services.IBTAttachmentService attachmentService
+@inject ZappitBugTracker.services.IBTModalService modalService
 @{
 	var user = await userManager.GetUserAsync(User);
 	var userId = await userManager.GetUserIdAsync(user);
@@ -11,6 +12,7 @@
 	ViewData["Title"] = "Details";
 }
 <h1>@Model.Title</h1>
+
 <hr />
 <div>
 	<!-- Description and Details-->
@@ -21,7 +23,7 @@
 				<div class="col">
 					<div class="card shadow mb-4 h-100">
 						<div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary">Description</h6>
+							<h6 class="m-0 font-weight-bold text-primary">Description <a data-toggle="modal" data-target="#editTicketDescription">(edit)</a></h6>
 						</div>
 						<div class="card-body">
 							@Html.DisplayFor(model => model.Description)
@@ -40,11 +42,11 @@
 								<h6 class="m-0 font-weight-bold text-dark">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-					 || await rolesService.IsUserInRole(user, "Admin")
-					 || (await rolesService.IsUserInRole(user, "ProjectManager")
-					 && await projectService.IsUserOnProject(userId, Model.ProjectId))
-					 || userId == Model.OwnerUserId)
-									{<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>}
+|| await rolesService.IsUserInRole(user, "Admin")
+|| (await rolesService.IsUserInRole(user, "ProjectManager")
+&& await projectService.IsUserOnProject(userId, Model.ProjectId))
+|| userId == Model.OwnerUserId)
+									{ }
 								</h6>
 							</div>
 						}
@@ -54,12 +56,12 @@
 								<h6 class="m-0 font-weight-bold text-dark">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-					 || await rolesService.IsUserInRole(user, "Admin")
-					 || (await rolesService.IsUserInRole(user, "ProjectManager")
-					 && await projectService.IsUserOnProject(userId, Model.ProjectId))
-					 || userId == Model.OwnerUserId)
+|| await rolesService.IsUserInRole(user, "Admin")
+|| (await rolesService.IsUserInRole(user, "ProjectManager")
+&& await projectService.IsUserOnProject(userId, Model.ProjectId))
+|| userId == Model.OwnerUserId)
 									{
-										<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
+
 									}
 								</h6>
 							</div>
@@ -70,28 +72,28 @@
 								<h6 class="m-0 font-weight-bold text-dark">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-					 || await rolesService.IsUserInRole(user, "Admin")
-					 || (await rolesService.IsUserInRole(user, "ProjectManager")
-					 && await projectService.IsUserOnProject(userId, Model.ProjectId))
-					 || userId == Model.OwnerUserId)
+|| await rolesService.IsUserInRole(user, "Admin")
+|| (await rolesService.IsUserInRole(user, "ProjectManager")
+&& await projectService.IsUserOnProject(userId, Model.ProjectId))
+|| userId == Model.OwnerUserId)
 									{
-										<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
+
 									}
 								</h6>
 							</div>
 						}
 						@if (Model.TicketPriorityId == 4)
 						{
-							<div class="card-header py-3 bg-danger">
-								<h6 class="m-0 font-weight-bold text-dark">
+							<div class="card-header py-3 bg-gradient-danger">
+								<h6 class="m-0 font-weight-bold">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-					 || await rolesService.IsUserInRole(user, "Admin")
-					 || (await rolesService.IsUserInRole(user, "ProjectManager")
-					 && await projectService.IsUserOnProject(userId, Model.ProjectId))
-					 || userId == Model.OwnerUserId)
+|| await rolesService.IsUserInRole(user, "Admin")
+|| (await rolesService.IsUserInRole(user, "ProjectManager")
+&& await projectService.IsUserOnProject(userId, Model.ProjectId))
+|| userId == Model.OwnerUserId)
 									{
-										<a class="text-dark" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticketId">(edit)</a>
+
 									}
 								</h6>
 							</div>
@@ -125,13 +127,13 @@
 											</dd>
 										}
 										<dt class="">
-											Priority
+											Priority <a class="text-dark" data-toggle="modal" data-target="#editTicketPriority">(edit)</a>
 										</dt>
 										<dd class="col-sm-10">
 											@Html.DisplayFor(model => model.TicketPriority.Name)
 										</dd>
 										<dt class="">
-											Status
+											Status <a class="text-dark" data-toggle="modal" data-target="#editTicketStatus">(edit)</a>
 										</dt>
 										<dd class="col-sm-10">
 											@Html.DisplayFor(model => model.TicketStatus.Name)
@@ -143,13 +145,13 @@
 									<dl>
 
 										<dt class="">
-											Project Name
+											Project Name <a class="text-dark" data-toggle="modal" data-target="#editTicketProject">(edit)</a>
 										</dt>
 										<dd class="col-sm-10">
 											@Html.DisplayFor(model => model.Project.Name)
 										</dd>
 										<dt class="">
-											Category
+											Category <a class="text-dark" data-toggle="modal" data-target="#editTicketCategory">(edit)</a>
 										</dt>
 										<dd class="col-sm-10">
 											@Html.DisplayFor(model => model.TicketType.Name)
@@ -163,7 +165,7 @@
 
 
 										<dt class="">
-											Assigned Developer
+											Assigned Developer <a class="text-dark" data-toggle="modal" data-target="#editTicketDev">(edit)</a>
 										</dt>
 										@if (Model.DeveloperUserId != null)
 										{
@@ -196,45 +198,47 @@
 				</div>
 				<div class="card-body">
 					<div class="row">
-						<table class="table myTableComments" id="myTable1">
-							<thead>
-								<tr>
-									<th>
-										Comment
-									</th>
-									<th>
-										Author
-									</th>
-									<th>
-										Created
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach (var item in Model.Comments)
-								{
+						<div class="table-responsive">
+							<table class="table myTableComments" id="myTable1">
+								<thead>
 									<tr>
-										<td>
-											@Html.DisplayFor(modelItem => item.Comment)
-										</td>
-										<td>
-											@Html.DisplayFor(modelItem => item.User.FullName)
-										</td>
-										<td>
-											@Html.DisplayFor(modelItem => item.Created)
-										</td>
+										<th>
+											Comment
+										</th>
+										<th>
+											Author
+										</th>
+										<th>
+											Created
+										</th>
 									</tr>
-								}
-							</tbody>
-						</table>
+								</thead>
+								<tbody>
+									@foreach (var item in Model.Comments)
+									{
+										<tr>
+											<td>
+												@Html.DisplayFor(modelItem => item.Comment)
+											</td>
+											<td>
+												@Html.DisplayFor(modelItem => item.User.FullName)
+											</td>
+											<td>
+												@Html.DisplayFor(modelItem => item.Created)
+											</td>
+										</tr>
+									}
+								</tbody>
+							</table>
+						</div>
 					</div>
 					<div class="row">
 						<div class="col">
 							@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
-							|| await rolesService.IsUserInRole(user, "Admin")
-							|| (await rolesService.IsUserInRole(user, "ProjectManager")
-							&& await projectService.IsUserOnProject(userId, Model.ProjectId))
-							|| userId == Model.OwnerUserId)
+						 || await rolesService.IsUserInRole(user, "Admin")
+						 || (await rolesService.IsUserInRole(user, "ProjectManager")
+						 && await projectService.IsUserOnProject(userId, Model.ProjectId))
+						 || userId == Model.OwnerUserId)
 							{
 								<form asp-controller="TicketComments" asp-action="Create">
 									<div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -243,7 +247,7 @@
 										<textarea name="Comment" class="form-control"> </textarea>
 									</div>
 									<div class="form-group d-flex align-items-end flex-column">
-										<input type="submit" value="Submit Comment" class="btn btn-primary mt-auto" style=""/>
+										<input type="submit" value="Submit Comment" class="btn btn-primary mt-auto" style="" />
 									</div>
 								</form>
 							}
@@ -259,6 +263,7 @@
 		<div class="col">
 			<div class="card shadow mb-4">
 				<div class="card-header py-3">
+							<i class="fas fa-plus"></i>
 					<h6 class="m-0 font-weight-bold text-primary">Attachments</h6>
 				</div>
 				<div class="card-body">
@@ -270,7 +275,7 @@
 									<input type="hidden" asp-for="@Model.Id" name="TicketId">
 
 									<div class="media-body ml-3">
-										
+
 										<label>
 											FileName
 											<input asp-for="@Model.Attachments.FirstOrDefault().Description" type="text" class="form-control" />
@@ -283,96 +288,353 @@
 								</form>
 							</div>
 						</div>
-						<div class="col">
-							@foreach (TicketAttachment item in Model.Attachments)
-							{
-								@if (item != null)
-								{
 
-									<div class="col-sm-2">
-										
-										<div class="file">
-											<a asp-controller="Tickets" asp-action="DownloadFile" asp-route-id="@item.Id">
-												<div class="icon">
-													<img src="@attachmentService.GetFileIcon(item.FileName)" style="height:60px;width:60px" />
-												</div>
-												<div class="file-name">
-													<p class="m-b-5 text-muted">@item.Description</p>
-													<small>Size: @attachmentService.FormatFileSize(item.FileData.Length) <span class="date text-muted">@item.Created.ToString("MMM dd, yyyy")</span></small>
-												</div>
-											</a>
-											<a asp-controller="Tickets" asp-action="DownloadFile" asp-route-id="@item.Id" download><div class="btn btn-outline-primary">Download</div></a>
-										</div>
-										
+						@foreach (TicketAttachment item in Model.Attachments)
+						{
+							@if (item != null)
+							{
+
+								<div class="col-sm-1">
+
+									<div class="file">
+										<a asp-controller="Tickets" asp-action="DownloadFile" asp-route-id="@item.Id">
+											<div class="icon">
+												<img src="@attachmentService.GetFileIcon(item.FileName)" style="height:60px;width:60px" />
+											</div>
+											<div class="file-name">
+												<p class="m-b-5 text-muted">@item.Description</p>
+												<small>Size: @attachmentService.FormatFileSize(item.FileData.Length) <span class="date text-muted">@item.Created.ToString("MMM dd, yyyy")</span></small>
+											</div>
+										</a>
+										<a asp-controller="Tickets" asp-action="DownloadFile" asp-route-id="@item.Id" download><div class="btn btn-outline-primary">Download</div></a>
 									</div>
-								}
+
+								</div>
 							}
+						}
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- End Attachments-->
+<!-- Histories -->
+<div class="row">
+	<div class="col">
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h6 class="m-0 font-weight-bold text-primary">Ticket Histories</h6>
+			</div>
+			<div class="card-body">
+				<table class="table myTableHistory" id="myTable1">
+					<thead>
+						<tr>
+							<th>
+								Changed Field
+							</th>
+							<th>
+								Original
+							</th>
+							<th>
+								Updated
+							</th>
+							<th>
+								Change Date
+							</th>
+
+							<th>
+								Changed By
+							</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model.Histories)
+						{
+							<tr>
+								<td>
+									@Html.DisplayFor(modelItem => item.Property)
+								</td>
+								<td>
+
+									@Html.DisplayFor(modelItem => item.OldValue)
+								</td>
+								<td>
+									@Html.DisplayFor(modelItem => item.NewValue)
+								</td>
+								<td>
+									@Html.DisplayFor(modelItem => item.Created)
+								</td>
+
+								<td>
+									@Html.DisplayFor(modelItem => item.User.Id)
+								</td>
+
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Histories-->
+</div>
+<!-- Modals -->
+<div class="modal fade" id="editTicketPriority" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	 aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Edit Ticket</h5>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<form asp-action="Edit">
+									<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+									<input type="hidden" asp-for="Id" />
+									<input type="hidden" asp-for="OwnerUserId" />
+									<input type="hidden" asp-for="Created" />
+									<input type="hidden" asp-for="Title" />
+									<input type="hidden" asp-for="Description" />
+									<input type="hidden" asp-for="TicketStatusId" />
+									<input type="hidden" asp-for="ProjectId" />
+									<input type="hidden" asp-for="TicketTypeId" />
+									<input type="hidden" asp-for="DeveloperUserId" />
+									<input type="hidden" asp-for="TicketPriorityId" />
+
+
+									<div class="form-group">
+										<label>Priority:</label>
+										@Html.DropDownList("TicketPriorityId", modalService.PriorityDropDown(), new { @class = "form-control" })
+									</div>
+									<div class="form-group">
+										<input type="submit" value="Save" class="btn btn-primary" />
+									</div>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- End Attachments-->
-	<!-- Histories -->
-	<div class="row">
-		<div class="col">
-			<div class="card shadow mb-4">
-				<div class="card-header py-3">
-					<h6 class="m-0 font-weight-bold text-primary">Ticket Histories</h6>
-				</div>
-				<div class="card-body">
-					<table class="table myTableHistory" id="myTable1">
-						<thead>
-							<tr>
-								<th>
-									Changed Field
-								</th>
-								<th>
-									Original
-								</th>
-								<th>
-									Updated
-								</th>
-								<th>
-									Change Date
-								</th>
-
-								<th>
-									Changed By
-								</th>
-
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (var item in Model.Histories)
-							{
-								<tr>
-									<td>
-										@Html.DisplayFor(modelItem => item.Property)
-									</td>
-									<td>
-
-										@Html.DisplayFor(modelItem => item.OldValue)
-									</td>
-									<td>
-										@Html.DisplayFor(modelItem => item.NewValue)
-									</td>
-									<td>
-										@Html.DisplayFor(modelItem => item.Created)
-									</td>
-
-									<td>
-										@Html.DisplayFor(modelItem => item.User.Id)
-									</td>
-
-								</tr>
-							}
-						</tbody>
-					</table>
+</div>
+<div class="modal fade" id="editTicketStatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	 aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Edit Ticket</h5>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<form asp-action="Edit">
+									<input type="hidden" asp-for="Id" />
+									<input type="hidden" asp-for="OwnerUserId" />
+									<input type="hidden" asp-for="Created" />
+									<input type="hidden" asp-for="Title" />
+									<input type="hidden" asp-for="Description" />
+									<input type="hidden" asp-for="ProjectId" />
+									<input type="hidden" asp-for="TicketTypeId" />
+									<input type="hidden" asp-for="DeveloperUserId" />
+									<input type="hidden" asp-for="TicketPriorityId" />
+									<div class="form-group">
+										<label>Status:</label>
+										@Html.DropDownList("TicketStatusId", modalService.StatusDropDown(), new { @class = "form-control" })
+									</div>
+									<div class="form-group">
+										<input type="submit" value="Save" class="btn btn-primary" />
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- End Histories-->
+</div>
+<div class="modal fade" id="editTicketProject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	 aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Edit Ticket</h5>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<form asp-action="Edit">
+									<input type="hidden" asp-for="Id" />
+									<input type="hidden" asp-for="OwnerUserId" />
+									<input type="hidden" asp-for="Created" />
+									<input type="hidden" asp-for="Title" />
+									<input type="hidden" asp-for="Description" />
+									<input type="hidden" asp-for="TicketStatusId" />
+									<input type="hidden" asp-for="TicketTypeId" />
+									<input type="hidden" asp-for="DeveloperUserId" />
+									<input type="hidden" asp-for="TicketPriorityId" />
+									<div class="form-group">
+										<label>Project:</label>
+										@Html.DropDownList("ProjectId", modalService.ProjectDropDown(), new { @class = "form-control" })
+									</div>
+									<div class="form-group">
+										<input type="submit" value="Save" class="btn btn-primary" />
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="editTicketCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	 aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Edit Ticket</h5>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<form asp-action="Edit">
+									<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+									<input type="hidden" asp-for="Id" />
+									<input type="hidden" asp-for="OwnerUserId" />
+									<input type="hidden" asp-for="Created" />
+									<input type="hidden" asp-for="Title" />
+									<input type="hidden" asp-for="Description" />
+									<input type="hidden" asp-for="TicketStatusId" />
+									<input type="hidden" asp-for="ProjectId" />
+									<input type="hidden" asp-for="DeveloperUserId" />
+									<input type="hidden" asp-for="TicketPriorityId" />
+									<div class="form-group">
+										<label>Category:</label>
+										@Html.DropDownList("TicketTypeId", modalService.TypeDropDown(), new { @class = "form-control" })
+									</div>
+									<div class="form-group">
+										<input type="submit" value="Save" class="btn btn-primary" />
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="editTicketDev" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	 aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Edit Ticket</h5>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<form asp-action="Edit">
+									<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+									<input type="hidden" asp-for="Id" />
+									<input type="hidden" asp-for="OwnerUserId" />
+									<input type="hidden" asp-for="Created" />
+									<input type="hidden" asp-for="Title" />
+									<input type="hidden" asp-for="Description" />
+									<input type="hidden" asp-for="TicketStatusId" />
+									<input type="hidden" asp-for="ProjectId" />
+									<input type="hidden" asp-for="TicketTypeId" />
+									<input type="hidden" asp-for="TicketPriorityId" />
+									<div class="form-group">
+										<label>Assigned Developer:</label>
+										@Html.DropDownList("DeveloperUserId", modalService.DevUserDropDown(), new { @class = "form-control" })
+									</div>
+									<div class="form-group">
+										<input type="submit" value="Save" class="btn btn-primary" />
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="editTicketDescription" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	 aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Edit Ticket</h5>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="card shadow mb-4 h-100">
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<form asp-action="Edit">
+									<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+									<input type="hidden" asp-for="Id" />
+									<input type="hidden" asp-for="OwnerUserId" />
+									<input type="hidden" asp-for="Created" />
+									<input type="hidden" asp-for="Title" />
+									<input type="hidden" asp-for="TicketStatusId" />
+									<input type="hidden" asp-for="ProjectId" />
+									<input type="hidden" asp-for="TicketTypeId" />
+									<input type="hidden" asp-for="DeveloperUserId" />
+									<input type="hidden" asp-for="TicketPriorityId" />
+									<div class="form-group">
+										<label>Description:</label>
+										<textarea type="text" class="form-control" name="Description"> </textarea>
+									</div>
+									<div class="form-group">
+										<input type="submit" value="Save" class="btn btn-primary" />
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

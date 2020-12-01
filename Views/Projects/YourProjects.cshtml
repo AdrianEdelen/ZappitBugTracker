@@ -18,17 +18,11 @@
 		<h6 class="m-0 font-weight-bold text-primary">Your Projects</h6>
 	</div>
 	<div class="card-body">
-		<table class="table myTable" id="myTable5">
+		<table class="table" id="projectsTable">
 			<thead>
 				<tr>
 					<th>
 						@Html.DisplayNameFor(model => model.Name)
-					</th>
-					<th>
-						@Html.DisplayNameFor(model => model.ImagePath)
-					</th>
-					<th>
-						@Html.DisplayNameFor(model => model.ImageData)
 					</th>
 					<th></th>
 				</tr>
@@ -42,12 +36,6 @@
 						<td>
 							<a asp-controller="Tickets" asp-action="ProjectTickets" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
 
-						</td>
-						<td>
-							@Html.DisplayFor(modelItem => item.ImagePath)
-						</td>
-						<td>
-							@Html.DisplayFor(modelItem => item.ImageData)
 						</td>
 						<td>
 							@if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))

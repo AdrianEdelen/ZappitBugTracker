@@ -85,7 +85,7 @@
 			<div class="card-body p-0">
 				<!-- Nested Row within Card Body -->
 				<div class="row">
-					<div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+					@*<div class="col-lg-6 d-none d-lg-block bg-login-image"></div>*@
 					<div class="col-lg-6">
 						<div class="p-5">
 							<div class="text-center">
@@ -118,7 +118,7 @@
 									<button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
 								</div>
 
-								<hr>
+								
 								@*<a href="index.html" class="btn btn-google btn-user btn-block">
 										<i class="fab fa-google fa-fw"></i> Login with Google
 									</a>
@@ -126,6 +126,14 @@
 										<i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
 									</a>*@
 							</form>
+
+						</div>
+					</div>
+					<div class="col">
+						<div class="p-5">
+							<div class="text-center">
+								<h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+							</div>
 							<form id="account" method="post" class="user">
 								<div class="form-group">
 									<button type="submit" name="demoEmail" value="DemoAdminEmail" class="btn btn-primary">Demo Admin</button>
@@ -167,11 +175,8 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 
-</div>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}
+	@section Scripts {
+		<partial name="_ValidationScriptsPartial" />
+	}

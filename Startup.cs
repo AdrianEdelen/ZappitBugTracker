@@ -44,6 +44,7 @@ namespace ZappitBugTracker
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IEmailSender, EmailService>();
             services.AddScoped<IBTAttachmentService, BTAttachmentService>();
+            services.AddScoped<IBTModalService, BTModalService>();
 
 
             services.AddControllersWithViews();

@@ -45,6 +45,7 @@ namespace ZappitBugTracker.Controllers
                 vm.User = user;
                 var selected = await _rolesService.ListUserRoles(user);
                 vm.Roles = new MultiSelectList(_context.Roles, "Name", "Name", selected);
+                vm.Roles = new SelectList(_context.Roles, "Name", "Name");
                 model.Add(vm);
             }
 
