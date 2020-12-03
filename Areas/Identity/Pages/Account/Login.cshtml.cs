@@ -105,7 +105,8 @@ namespace ZappitBugTracker.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return RedirectToAction("Index", "Home");
+                    //return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {

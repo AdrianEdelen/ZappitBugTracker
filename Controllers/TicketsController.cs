@@ -37,27 +37,27 @@ namespace ZappitBugTracker.Controllers
         #endregion
 
         //GET AllTickets
-        #region Get/post all tickets
-        [Authorize(Roles = "Admin,ProjectManager,Developer")]
-        public async Task<IActionResult> AllTickets()
-        {
-            var applicationDbContext = _context.Tickets
-                .Include(t => t.DeveloperUser)
-                .Include(t => t.OwnerUser)
-                .Include(t => t.Project)
-                .Include(t => t.TicketPriority)
-                .Include(t => t.TicketStatus)
-                .Include(t => t.TicketType);
-            return View(await applicationDbContext.ToListAsync());
-        }
-        //POST AllTickets
-        //[HttpPost]
-        //[Authorize(Roles = "Admin,ProjectManager")]
+        //#region Get/post all tickets
+        //[Authorize(Roles = "Admin,ProjectManager,Developer")]
         //public async Task<IActionResult> AllTickets()
         //{
-        //    return View();
+        //    var applicationDbContext = _context.Tickets
+        //        .Include(t => t.DeveloperUser)
+        //        .Include(t => t.OwnerUser)
+        //        .Include(t => t.Project)
+        //        .Include(t => t.TicketPriority)
+        //        .Include(t => t.TicketStatus)
+        //        .Include(t => t.TicketType);
+        //    return View(await applicationDbContext.ToListAsync());
         //}
-        #endregion
+        ////POST AllTickets
+        ////[HttpPost]
+        ////[Authorize(Roles = "Admin,ProjectManager")]
+        ////public async Task<IActionResult> AllTickets()
+        ////{
+        ////    return View();
+        ////}
+        //#endregion
         #region CreateAttachments
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -114,21 +114,21 @@ namespace ZappitBugTracker.Controllers
 
         }
         #endregion
-        #region GET Index
-        // GET: Tickets
-        [Authorize]
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = _context.Tickets
-                .Include(t => t.DeveloperUser)
-                .Include(t => t.OwnerUser)
-                .Include(t => t.Project)
-                .Include(t => t.TicketPriority)
-                .Include(t => t.TicketStatus)
-                .Include(t => t.TicketType);
-            return View(await applicationDbContext.ToListAsync());
-        }
-        #endregion
+        //#region GET Index
+        //// GET: Tickets
+        //[Authorize]
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.Tickets
+        //        .Include(t => t.DeveloperUser)
+        //        .Include(t => t.OwnerUser)
+        //        .Include(t => t.Project)
+        //        .Include(t => t.TicketPriority)
+        //        .Include(t => t.TicketStatus)
+        //        .Include(t => t.TicketType);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}
+        //#endregion
         #region GET Details
         // GET: Tickets/Details/5
         [Authorize]
