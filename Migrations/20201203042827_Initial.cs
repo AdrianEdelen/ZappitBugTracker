@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using System;
 
 namespace ZappitBugTracker.Migrations
 {
@@ -335,7 +335,9 @@ namespace ZappitBugTracker.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FilePath = table.Column<string>(nullable: true),
-                    FileData = table.Column<byte[]>(nullable: false),
+                    FileName = table.Column<string>(nullable: true),
+                    ContentType = table.Column<string>(nullable: true),
+                    FileData = table.Column<byte[]>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     Created = table.Column<DateTimeOffset>(nullable: false),
                     TicketId = table.Column<int>(nullable: false),

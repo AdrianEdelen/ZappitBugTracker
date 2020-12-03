@@ -31,11 +31,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Identity\Pages\Account\Register.cshtml.cs" />
     <Compile Remove="Controllers\NotificationsController.cs" />
     <Compile Remove="Controllers\TicketHistoriesController.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Identity\Pages\Account\Register.cshtml" />
     <Content Remove="Views\Projects\Delete.cshtml" />
     <Content Remove="Views\Projects\Details.cshtml" />
     <Content Remove="Views\TicketPriorities\Details.cshtml" />

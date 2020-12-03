@@ -70,18 +70,7 @@
 					</a>
 				</li>
 				<!-- Nav Item - Tables -->
-				<li class="nav-item">
-					<a class="nav-link" asp-area="" asp-controller="Tickets" asp-action="Index">
-						<i class="fas fa-list"></i>
-						<span>View Your Tickets</span>
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" asp-area="" asp-controller="Projects" asp-action="YourProjects">
-						<i class="fas fa-list"></i>
-						<span>View Your Projects</span>
-					</a>
-				</li>
+
 			}
 			@if (User.IsInRole("Developer"))
 			{
@@ -99,20 +88,7 @@
 					</a>
 				</li>
 				<!-- Nav Item - Projects Collapse Menu -->
-				<li class="nav-item">
-					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-					   aria-expanded="true" aria-controls="collapseTwo">
-						<i class="fas fa-fw fa-cog"></i>
-						<span>Projects</span>
-					</a>
-					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-						<div class="bg-white py-2 collapse-inner rounded">
-							<h6 class="collapse-header">Project Options</h6>
-							<a class="collapse-item" asp-area="" asp-controller="Projects" asp-action="YourProjects">Your Projects</a>
-							<a class="collapse-item" asp-area="" asp-controller="Projects" asp-action="Index">View All Projects</a>
-						</div>
-					</div>
-				</li>
+
 			}
 			@if (User.IsInRole("ProjectManager"))
 			{
@@ -125,27 +101,20 @@
 				</li>
 				<hr class="sidebar-divider my-0">
 				<!--create ticket-->
-		<li class="nav-item">
-			<a class="nav-link" data-toggle="modal" data-target="#createTicketModal">
-				<i class="fas fa-ticket-alt"></i>
-				<span>Create New Ticket</span>
-			</a>
-		</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="modal" data-target="#createTicketModal">
+						<i class="fas fa-ticket-alt"></i>
+						<span>Create New Ticket</span>
+					</a>
+				</li>
 				<!-- Nav Item - Projects Collapse Menu -->
 				<li class="nav-item">
-					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-						<i class="fas fa-fw fa-cog"></i>
-						<span>Projects</span>
+					<a class="nav-link" data-toggle="modal" data-target="#createProjectModal">
+						<i class="fas fa-cog"></i>
+						<span>Create New Project</span>
 					</a>
-					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-						<div class="bg-white py-2 collapse-inner rounded">
-							<h6 class="collapse-header">Project Options</h6>
-							<a class="collapse-item" data-toggle="modal" data-target="#createProjectModal">Create New Project</a>
-							<a class="collapse-item" asp-area="" asp-controller="Projects" asp-action="YourProjects">Your Projects</a>
-							<a class="collapse-item" asp-area="" asp-controller="Projects" asp-action="Index">View All Projects</a>
-						</div>
-					</div>
 				</li>
+
 			}
 			@if (User.IsInRole("Admin"))
 			{
@@ -156,29 +125,19 @@
 				</li>
 				<hr class="sidebar-divider my-0">
 				<!--create ticket -->
-		<li class="nav-item">
-			<a class="nav-link" data-toggle="modal" data-target="#createTicketModal">
-				<i class="fas fa-ticket-alt"></i>
-				<span>Create New Ticket</span>
-			</a>
-		</li>
-				<!-- Nav Item - Projects Collapse Menu -->
 				<li class="nav-item">
-					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-					   aria-expanded="true" aria-controls="collapseTwo">
-						<i class="fas fa-fw fa-cog"></i>
-						<span>Projects</span>
+					<a class="nav-link" data-toggle="modal" data-target="#createTicketModal">
+						<i class="fas fa-ticket-alt"></i>
+						<span>Create New Ticket</span>
 					</a>
-					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-						<div class="bg-white py-2 collapse-inner rounded">
-							<h6 class="collapse-header">Project Options</h6>
-
-							<a class="collapse-item" data-toggle="modal" data-target="#createProjectModal">Create New Project</a>
-							<a class="collapse-item" asp-area="" asp-controller="Projects" asp-action="YourProjects">Your Projects</a>
-							<a class="collapse-item" asp-area="" asp-controller="Projects" asp-action="Index">View All Projects</a>
-						</div>
-					</div>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" data-toggle="modal" data-target="#createProjectModal">
+						<i class="fas fa-cog"></i>
+						<span>Create New Project</span>
+					</a>
+				</li>
+
 				<!-- Nav Item - Users Collapse Menu -->
 				<li class="nav-item">
 					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"

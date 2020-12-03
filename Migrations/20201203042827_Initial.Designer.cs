@@ -10,8 +10,8 @@ using ZappitBugTracker.Data;
 namespace ZappitBugTracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201124162418_fixedTypoInFormFilePropTicketAttachmentModel")]
-    partial class fixedTypoInFormFilePropTicketAttachmentModel
+    [Migration("20201203042827_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -376,7 +376,6 @@ namespace ZappitBugTracker.Migrations
                         .HasColumnType("text");
 
                     b.Property<byte[]>("FileData")
-                        .IsRequired()
                         .HasColumnType("bytea");
 
                     b.Property<string>("FileName")

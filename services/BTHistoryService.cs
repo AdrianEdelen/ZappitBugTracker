@@ -74,7 +74,7 @@ namespace ZappitBugTracker.services
                 TicketHistory history = new TicketHistory
                 {
                     TicketId = newTicket.Id,
-                    Property = "Developer User", 
+                    Property = "Developer User",
                     OldValue = oldTicket.DeveloperUser == null ? "No Developer Assigned" : oldTicket.DeveloperUser.FullName,
                     NewValue = newTicket.DeveloperUser == null ? "No Developer Assigned" : newTicket.DeveloperUser.FullName,
                     Created = DateTimeOffset.Now,
@@ -108,7 +108,7 @@ namespace ZappitBugTracker.services
                 };
                 await _context.TicketHistories.AddAsync(history);
             }
-            
+
             Notification notification = new Notification
             {
                 TicketId = newTicket.Id,
@@ -120,17 +120,21 @@ namespace ZappitBugTracker.services
             await _context.Notifications.AddAsync(notification);
 
             //send email
-            var ticketName = newTicket.Title;
-            var projectName = await _context.Users.FindAsync(newTicket.DeveloperUserId);
-            string devEmail = newTicket.DeveloperUser.Email;
-            string subject = "A Ticket You Are Assigned To Has Changed.";
-            string message = $"The Ticket: {ticketName}, in project: {projectName}. Has Changed. Please Login to you dashboard and review the changes.";
-            await _emailSender.SendEmailAsync(devEmail, subject, message);
+            if (newTicket.DeveloperUserId != null)
+            {
+                var ticketName = newTicket.Title;
+                var projectName = await _context.Users.FindAsync(newTicket.DeveloperUserId);
+                string devEmail = newTicket.DeveloperUser.Email;
+                string subject = "A Ticket You Are Assigned To Has Changed.";
+                string message = $"The Ticket: {ticketName}, in project: {projectName}. Has Changed. Please Login to you dashboard and review the changes.";
+                await _emailSender.SendEmailAsync(devEmail, subject, message);
+            }
+
 
             await _context.SaveChangesAsync();
         }
 
-        
+
 
         public IEnumerable<TicketHistory> GenerateTicketHistories(Ticket oldTicket, Ticket newTicket)
         {

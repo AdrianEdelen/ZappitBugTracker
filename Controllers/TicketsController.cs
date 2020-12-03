@@ -173,7 +173,7 @@ namespace ZappitBugTracker.Controllers
                 _context.Add(ticket);
                 ticket.Created = DateTime.Now;
                 ticket.TicketPriorityId = (await _context.TicketPriority.FirstOrDefaultAsync(p => p.Name == "New")).Id;
-                ticket.TicketStatusId = (await _context.TicketStatus.FirstOrDefaultAsync(s => s.Name == "Unassigned")).Id;
+                ticket.TicketStatusId = (await _context.TicketStatus.FirstOrDefaultAsync(s => s.Name == "New")).Id;
                 ticket.OwnerUserId = _userManager.GetUserId(User);
 
                 await _context.SaveChangesAsync();

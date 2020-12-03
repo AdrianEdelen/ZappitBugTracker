@@ -1091,7 +1091,7 @@ namespace ZappitBugTracker.Data
             int project2Id = (await context.Projects.FirstOrDefaultAsync(predicate => predicate.Name == "Issue Tracker Software")).Id;
             int project3Id = (await context.Projects.FirstOrDefaultAsync(predicate => predicate.Name == "Blog")).Id;
             int project4Id = (await context.Projects.FirstOrDefaultAsync(predicate => predicate.Name == "Financial Portal API")).Id;
-            int statusId = (await context.TicketStatus.FirstOrDefaultAsync(ts => ts.Name == "open")).Id;
+            int statusId = (await context.TicketStatus.FirstOrDefaultAsync(ts => ts.Name == "Open")).Id;
             int typeId = (await context.TicketTypes.FirstOrDefaultAsync(ts => ts.Name == "Bug")).Id;
             int priorityId = (await context.TicketPriority.FirstOrDefaultAsync(ts => ts.Name == "Low")).Id;
 
