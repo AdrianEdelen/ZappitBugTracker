@@ -11,5 +11,6 @@ namespace ZappitBugTracker.services
         public int YourTickets();
         public int UrgentTickets();
         public int OpenTickets();
+        public int TicketsToday();
     }
 }
