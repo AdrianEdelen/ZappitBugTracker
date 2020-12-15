@@ -48,6 +48,8 @@
     <Content Remove="Views\Tickets\Index.cshtml" />
     <Content Remove="Views\TicketTypes\Details.cshtml" />
     <Content Remove="Views\TicketTypes\Edit.cshtml" />
+    <Content Remove="wwwroot\js\demo\chart-area-demo.js" />
+    <Content Remove="wwwroot\js\demo\chart-bar-demo.js" />
   </ItemGroup>
 
   <ItemGroup>

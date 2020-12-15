@@ -38,7 +38,7 @@
 					<div class="card shadow mb-4 h-100">
 						@if (Model.TicketPriorityId == 1)
 						{
-							<div class="card-header py-3 bg-info">
+							<div class="card-header py-3 border-bottom-info">
 								<h6 class="m-0 font-weight-bold text-dark">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
@@ -52,7 +52,7 @@
 						}
 						@if (Model.TicketPriorityId == 2)
 						{
-							<div class="card-header py-3 bg-success">
+							<div class="card-header py-3 border-bottom-success">
 								<h6 class="m-0 font-weight-bold text-dark">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
@@ -68,7 +68,7 @@
 						}
 						@if (Model.TicketPriorityId == 3)
 						{
-							<div class="card-header py-3 bg-warning">
+							<div class="card-header py-3 border-bottom-warning">
 								<h6 class="m-0 font-weight-bold text-dark">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
@@ -84,7 +84,7 @@
 						}
 						@if (Model.TicketPriorityId == 4)
 						{
-							<div class="card-header py-3 bg-gradient-danger">
+							<div class="card-header py-3 border-bottom-danger">
 								<h6 class="m-0 font-weight-bold">
 									Ticket Details
 									@if (await accessService.CanInteractTicket(userId, Model.Id, "Developer")
@@ -244,7 +244,7 @@
 									<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 									@Html.Hidden("TicketId", Model.Id)
 									<div class="form-group">
-										<textarea name="Comment" class="form-control"> </textarea>
+										<textarea name="Comment" class="form-control" required placeholder="Enter Your Comment"> </textarea>
 									</div>
 									<div class="form-group d-flex align-items-end flex-column">
 										<input type="submit" value="Submit Comment" class="btn btn-primary mt-auto" style="" />

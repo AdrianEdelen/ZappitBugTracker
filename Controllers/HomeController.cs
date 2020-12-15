@@ -13,7 +13,7 @@ namespace ZappitBugTracker.Controllers
 {
     public class HomeController : Controller
     {
-       
+
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         #region Constructors

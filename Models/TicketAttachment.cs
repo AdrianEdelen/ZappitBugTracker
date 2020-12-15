@@ -13,7 +13,7 @@ namespace ZappitBugTracker.Models
 
         [NotMapped]
         [DataType(DataType.Upload)]
-        [AllowedExtensions(new string[] { ".doc", ".docx", ".xls", ".xlsx", ".pdf", ".jpg", ".png"})]
+        [AllowedExtensions(new string[] { ".doc", ".docx", ".xls", ".xlsx", ".pdf", ".jpg", ".png" })]
         [MaxFileSize(2 * 1024 * 1024)]
         public IFormFile FormFile { get; set; }
         public string FileName { get; set; }

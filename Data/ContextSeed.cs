@@ -669,7 +669,7 @@ namespace ZappitBugTracker.Data
                     Debug.WriteLine($"**** Error Adding Default Ticket Status {status.Name} ****");
                     Debug.WriteLine(ex.Message);
                 }
-            }    
+            }
         }
         private static async Task SeedDefaultProjectsAsync(ApplicationDbContext context)
         {
@@ -719,7 +719,7 @@ namespace ZappitBugTracker.Data
             var projectIdList = new List<int>();
             foreach (var admin in adminList)
             {
-                
+
                 adminIdList.Add((await userManager.FindByEmailAsync(admin.Email)).Id);
             }
             foreach (var pm in pMList)

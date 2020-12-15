@@ -11,7 +11,6 @@ using ZappitBugTracker.Data;
 using ZappitBugTracker.Models;
 using ZappitBugTracker.Models.ViewModels;
 using ZappitBugTracker.services;
-using ZappitBugTracker.Helpers;
 
 namespace ZappitBugTracker.Controllers
 {
@@ -24,7 +23,7 @@ namespace ZappitBugTracker.Controllers
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTRolesService _rolesService;
         private readonly IBTImageService _imageService;
-       
+
 
         #endregion
         #region constructors
@@ -86,7 +85,7 @@ namespace ZappitBugTracker.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            
+
             return View(await _context.Projects.ToListAsync());
         }
         #endregion

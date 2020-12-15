@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ZappitBugTracker.Data;
@@ -63,10 +62,10 @@ namespace ZappitBugTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MakeAttachment([Bind("FormFile, Description, TicketId")] TicketAttachment ticketAttachment)
         {
-            
+
             if (ModelState.IsValid)
             {
-               
+
                 ticketAttachment.ContentType = ticketAttachment.FormFile.ContentType;
                 ticketAttachment.FileData = await _attachmentService.ConvertFileToByteArrayAsync(ticketAttachment.FormFile);
                 ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
@@ -78,11 +77,11 @@ namespace ZappitBugTracker.Controllers
                 return RedirectToAction("Details", "Tickets", new { id = ticketAttachment.TicketId });
 
             }
-            
+
             return RedirectToAction("Details", "Tickets", new { id = ticketAttachment.TicketId });
         }
         #endregion
-        
+
         #region GET Project Tickets
         //GET Project Tickets
         [Authorize]
@@ -160,7 +159,7 @@ namespace ZappitBugTracker.Controllers
         }
         #endregion
         #region POST Create
-        
+
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -188,7 +187,7 @@ namespace ZappitBugTracker.Controllers
             ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Id", ticket.TicketStatusId);
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
             return View();
-            
+
         }
         #endregion
         #region GET/POST Edit
@@ -219,10 +218,10 @@ namespace ZappitBugTracker.Controllers
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(_context.Set<TicketPriority>(), "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketStatusId"] = new SelectList(_context.Set<TicketStatus>(), "Id", "Name", ticket.TicketStatusId);
-            
+
             return View(ticket);
         }
-        
+
         // POST: Tickets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -341,7 +340,7 @@ namespace ZappitBugTracker.Controllers
             return _context.Tickets.Any(e => e.Id == id);
         }
 
-        public async Task<FileResult> DownloadFile (int id)
+        public async Task<FileResult> DownloadFile(int id)
         {
             TicketAttachment attachment = await _context.TicketAttachments.FindAsync(id);
             return File(attachment.FileData, attachment.ContentType);

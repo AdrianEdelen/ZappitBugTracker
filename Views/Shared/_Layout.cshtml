@@ -174,7 +174,7 @@
 						<i class="fa fa-bars"></i>
 					</button>
 					<!--Topbar Navbar-->
-					<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+					@*<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
 						<div class="input-group">
 							<input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
 								   aria-label="Search" aria-describedby="basic-addon2">
@@ -184,7 +184,7 @@
 								</button>
 							</div>
 						</div>
-					</form>
+					</form>*@
 					<ul class="navbar-nav ml-auto">
 						<partial name="_LoginPartial" />
 						<!--Nav Item - Search Dropdown(Visible Only XS)-->
@@ -213,16 +213,16 @@
 						@if (SignInManager.IsSignedIn(User))
 						{
 							<!--Nav Item - Alerts-->
-							<li class="nav-item dropdown no-arrow mx-1">
+							<!--<li class="nav-item dropdown no-arrow mx-1">
 								<a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
 								   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<i class="fas fa-bell fa-fw">
-									</i>
+									</i>-->
 									<!--Counter - Alerts-->
-									<span class="badge badge-danger badge-counter">3+</span>
-								</a>
+									<!--<span class="badge badge-danger badge-counter">3+</span>
+								</a>-->
 								<!--Dropdown - Alerts-->
-								<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+								<!--<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
 									 aria-labelledby="alertsDropdown">
 									<h6 class="dropdown-header">Alerts Center</h6>
 									<a class="dropdown-item d-flex align-items-center" href="#">
@@ -260,7 +260,7 @@
 									</a>
 									<a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
 								</div>
-							</li>
+							</li>-->
 							<div class="topbar-divider d-none d-sm-block">
 							</div>
 							<!--Nav Item - User Information-->
@@ -433,10 +433,9 @@
 	<!-- Page level plugins -->
 	<script src="~/chart.js/Chart.min.js"></script>
 	<!-- Page level custom scripts -->
-	<script src="~/js/demo/chart-area-demo.js"></script>
-	<script src="~/js/demo/chart-pie-demo.js"></script>
-	<!-- Page level plugins -->
-	<script src="vendor/chart.js/Chart.min.js"></script>
+	
+	
+	
 	<!-- morris chart -->
 	@* Datatables *@
 	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>

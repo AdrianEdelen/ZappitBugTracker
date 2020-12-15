@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ZappitBugTracker.Models.ViewModels
+﻿namespace ZappitBugTracker.Models.ViewModels
 {
     public class TicketsAndProjectsViewModel
     {

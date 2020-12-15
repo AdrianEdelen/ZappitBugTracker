@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ZappitBugTracker.Data;
 
 namespace ZappitBugTracker.services
@@ -18,7 +16,7 @@ namespace ZappitBugTracker.services
         public int OpenTickets()
         {
             return _context.Tickets.Where(t => t.TicketStatusId != 3).Count();
-            
+
         }
 
         public int TicketCount()
@@ -38,7 +36,7 @@ namespace ZappitBugTracker.services
                 {
                     count++;
                 }
-                
+
             }
             return count;
         }
